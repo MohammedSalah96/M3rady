@@ -5,6 +5,10 @@ namespace App\Models;
 class Location extends MyModel {
  
     protected $table = "locations";
+    protected $casts = [
+        'id' => 'integer',
+        'name' => 'string'
+    ];
   
     public function translations() {
         return $this->hasMany(LocationTranslation::class, 'location_id');
@@ -21,8 +25,9 @@ class Location extends MyModel {
         $transformer = new \stdClass();
         $transformer->id = $this->id;
         $transformer->name = $this->name;
-        $transformer->childrens = $this->childrens ?: [];
-        
+        if (!$this->parent_id) {
+            $transformer->childrens = $this->childrens ?: [];
+        }
         return $transformer;
     }
 

@@ -5,6 +5,11 @@ namespace App\Models;
 class Category extends MyModel {
  
     protected $table = "categories";
+    protected $casts = [
+        'id' => 'integer',
+        'name' => 'string',
+        'image' => 'string'
+    ];
    
     public function translations() {
         return $this->hasMany(CategoryTranslation::class, 'category_id');
@@ -20,7 +25,10 @@ class Category extends MyModel {
         $transformer = new \stdClass();
         $transformer->id = $this->id;
         $transformer->name = $this->name;
-        $transformer->childrens = $this->childrens ?: [];
+        $transformer->image = url("public/uploads/categories/$this->image");
+        if (!$this->parent_id) {
+            $transformer->childrens = $this->childrens ?: [];
+        }
         
         return $transformer;
     }

@@ -69,6 +69,43 @@ class RepositoriesServiceProvider extends ServiceProvider
             'App\Repositories\Backend\PackageTranslation\PackageTranslationRepository'
         );
 
+        /** api */
+        $this->app->bind(
+            'App\Repositories\Api\User\UserRepositoryInterface',
+            'App\Repositories\Api\User\UserRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\Device\DeviceRepositoryInterface',
+            'App\Repositories\Api\Device\DeviceRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\SocialUser\SocialUserRepositoryInterface',
+            'App\Repositories\Api\SocialUser\SocialUserRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\CompanyDetails\CompanyDetailsRepositoryInterface',
+            'App\Repositories\Api\CompanyDetails\CompanyDetailsRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\Category\CategoryRepositoryInterface',
+            'App\Repositories\Api\Category\CategoryRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\Location\LocationRepositoryInterface',
+            'App\Repositories\Api\Location\LocationRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\Post\PostRepositoryInterface',
+            'App\Repositories\Api\Post\PostRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\Like\LikeRepositoryInterface',
+            'App\Repositories\Api\Like\LikeRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\Comment\CommentRepositoryInterface',
+            'App\Repositories\Api\Comment\CommentRepository'
+        );
        
   
         

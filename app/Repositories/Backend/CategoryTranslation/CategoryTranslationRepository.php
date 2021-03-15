@@ -31,10 +31,10 @@ class CategoryTranslationRepository extends BaseRepository implements BaseTransl
    {
       $categoryTranslations = array();
       $name = $request->input('name');
-      foreach ($this->languages as $key => $value) {
+      foreach ($this->languages as $lang) {
          $categoryTranslations[] = array(
-            'locale' => $key,
-            'name' => $name[$key],
+            'locale' => $lang,
+            'name' => $name[$lang],
             'category_id' => $category->id,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')

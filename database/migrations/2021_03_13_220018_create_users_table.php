@@ -22,6 +22,10 @@ class CreateUsersTable extends Migration
             $table->text('image');
             $table->integer('type');
             $table->boolean('active')->default(true);
+            $table->bigInteger('country_id')->unsigned();
+            $table->foreign('country_id')->references('id')->on('locations');
+            $table->bigInteger('city_id')->unsigned();
+            $table->foreign('city_id')->references('id')->on('locations');
             $table->timestamps();
         });
     }

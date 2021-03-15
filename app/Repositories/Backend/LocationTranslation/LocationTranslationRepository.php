@@ -31,10 +31,10 @@ class LocationTranslationRepository extends BaseRepository implements BaseTransl
    {
       $locationTranslations = array();
       $name = $request->input('name');
-      foreach ($this->languages as $key => $value) {
+      foreach ($this->languages as $lang) {
          $locationTranslations[] = array(
-            'locale' => $key,
-            'name' => $name[$key],
+            'locale' => $lang,
+            'name' => $name[$lang],
             'location_id' => $location->id,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')

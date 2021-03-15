@@ -32,11 +32,11 @@ class PackageTranslationRepository extends BaseRepository implements BaseTransla
       $packageTranslations = array();
       $name = $request->input('name');
       $description = $request->input('description');
-      foreach ($this->languages as $key => $value) {
+      foreach ($this->languages as $lang) {
          $packageTranslations[] = array(
-            'locale' => $key,
-            'name' => $name[$key],
-            'description' => $description[$key],
+            'locale' => $lang,
+            'name' => $name[$lang],
+            'description' => $description[$lang],
             'package_id' => $package->id,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
