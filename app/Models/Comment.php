@@ -21,12 +21,13 @@ class Comment extends MyModel
     {
        $transformer = new \stdClass();
        $transformer->id = $this->id;
-       $transformer->comment = $this->comment;
-       $transformer->image = $this->image ? url("public/uploads/comments/$this->image") : "";
+       
        $transformer->user_id = $this->user_id;
+       $transformer->name = $this->company_id ?: $this->name;
+       $transformer->image = url("public/uploads/users/$this->user_image");
        $transformer->user_type = $this->type;
-       $transformer->user_image = url("public/uploads/users/$this->user_image");
-       $transformer->username = $this->company_id ?: $this->name;
+        $transformer->comment = $this->comment;
+        $transformer->comment_image = $this->image ? url("public/uploads/comments/$this->image") : "";
        if (is_bool($this->is_mine)) {
            $transformer->is_mine = $this->is_mine;
        }

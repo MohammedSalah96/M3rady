@@ -7,17 +7,20 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Repositories\Api\CompanyDetails\CompanyDetailsRepositoryInterface;
+use App\Repositories\Api\Follower\FollowerRepositoryInterface;
 use App\Repositories\Api\User\UserRepositoryInterface;
 
 class UserController extends ApiController {
 
     private $userRepository;
     private $companyDetailsRepository;
+    private $followerRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository, CompanyDetailsRepositoryInterface $companyDetailsRepository) {
+    public function __construct(UserRepositoryInterface $userRepository, CompanyDetailsRepositoryInterface $companyDetailsRepository, FollowerRepositoryInterface $followerRepository) {
         parent::__construct();
         $this->userRepository = $userRepository;
         $this->companyDetailsRepository = $companyDetailsRepository;
+        $this->followerRepository = $followerRepository;
     }
 
     public function getToken(Request $request)
@@ -103,6 +106,43 @@ class UserController extends ApiController {
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
+        }
+    }
+
+    public function handleFollow($id)
+    {
+        try {
+            $this->followerRepository->createOrDelete($id);
+            return _api_json('');
+        } catch (\Exception $ex) {
+            $message = _lang('app.something_went_wrong');
+            return _api_json(new \stdClass(), ['message' => $message], 400);
+        }
+    }
+
+    public function getFollowings(Request $request)
+    {
+        try {
+            $followings = $this->followerRepository->getFollowings($request)->transform(function ($following, $key) {
+                return $following->transform();
+            });
+            return _api_json($followings);
+        } catch (\Exception $ex) {
+            $message = _lang('app.something_went_wrong');
+            return _api_json([], ['message' => $message], 400);
+        }
+    }
+
+    public function getFollowers(Request $request)
+    {
+        try {
+            $followers = $this->followerRepository->getFollowers($request)->transform(function ($follower, $key) {
+                return $follower->transform();
+            });
+            return _api_json($followers);
+        } catch (\Exception $ex) {
+            $message = _lang('app.something_went_wrong');
+            return _api_json([], ['message' => $message], 400);
         }
     }
 

@@ -8,7 +8,14 @@ class Post extends MyModel
 
     protected $casts = [
         'id' => 'integer',
-        'description' => 'string'
+        'user_id' => 'integer',
+        'description' => 'string',
+        'company_id' => 'string',
+        'country' => 'string',
+        'city' => 'string',
+        'number_of_likes' => 'integer',
+        'number_of_comments' => 'integer',
+        'is_mine' => 'boolean'
     ];
     
     public function user()
@@ -36,9 +43,25 @@ class Post extends MyModel
     {
         $transformer = new \stdClass();
         $transformer->id = $this->id;
-        $transformer->images = preg_filter('/^/', url('public/uploads/posts').'/', json_decode($this->images));
+        $transformer->user_id = $this->user_id;
+        $transformer->name = $this->company_id;
+        $transformer->image = url("public/uploads/users/$this->company_image");
+        $transformer->is_featured = $this->is_featured ? true : false;
+        $transformer->country = $this->country;
+        $transformer->city = $this->city;
+        $transformer->images = preg_filter('/^/', url('public/uploads/posts') . '/', json_decode($this->images));
         $transformer->description = $this->description;
-
+        $transformer->number_of_likes = $this->number_of_likes;
+        $transformer->number_of_comments = $this->number_of_comments;
+        if ($this->auth_user()) {
+            $transformer->is_liked = $this->is_liked ? true : false;
+            $transformer->is_abused = $this->is_abused ? true : false;
+            if (is_bool($this->is_mine)) {
+                $transformer->is_mine = $this->is_mine;
+            }
+        }
+       
+        
         return $transformer;
     }
 

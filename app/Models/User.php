@@ -78,16 +78,17 @@ class User extends Authenticatable implements UserInterface {
         }
         if ($this->type == $this->types['company']) {
             $companyDetails = $this->companyDetails;
+            $userSubscription = $this->subscriptions()->latest()->first();
             if ($companyDetails->available_free_posts != 0) {
                 $transformer->allowed_to_post = true;
             } else {
-                $userSubscription = $this->subscriptions()->latest()->first();
                 if ($userSubscription && $userSubscription->end_date >= date('Y-m-d')) {
                     $transformer->allowed_to_post = true;
                 } else {
                     $transformer->allowed_to_post = false;
                 }
             }
+            $transformer->is_featured = $userSubscription->end_date >= date('Y-m-d') ? true : false;
             $transformer->company_details = $companyDetails->transform();
             $transformer->posts_count = $this->posts()->count();
             $transformer->followers_count = $this->followers()->count();

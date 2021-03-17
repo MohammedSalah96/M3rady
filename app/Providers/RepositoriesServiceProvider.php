@@ -106,6 +106,30 @@ class RepositoriesServiceProvider extends ServiceProvider
             'App\Repositories\Api\Comment\CommentRepositoryInterface',
             'App\Repositories\Api\Comment\CommentRepository'
         );
+        $this->app->bind(
+            'App\Repositories\Api\Abuse\AbuseRepositoryInterface',
+            'App\Repositories\Api\Abuse\AbuseRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\Follower\FollowerRepositoryInterface',
+            'App\Repositories\Api\Follower\FollowerRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\Rate\RateRepositoryInterface',
+            'App\Repositories\Api\Rate\RateRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\ContactMessage\ContactMessageRepositoryInterface',
+            'App\Repositories\Api\ContactMessage\ContactMessageRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\Package\PackageRepositoryInterface',
+            'App\Repositories\Api\Package\PackageRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\PackageSubscription\PackageSubscriptionRepositoryInterface',
+            'App\Repositories\Api\PackageSubscription\PackageSubscriptionRepository'
+        );
        
   
         

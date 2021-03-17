@@ -6,6 +6,7 @@ use DB;
 use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
+use App\Repositories\Api\Abuse\AbuseRepositoryInterface;
 use App\Repositories\Api\Like\LikeRepositoryInterface;
 use App\Repositories\Api\Post\PostRepositoryInterface;
 use App\Repositories\Api\User\UserRepositoryInterface;
@@ -24,13 +25,15 @@ class PostsController extends ApiController
     private $companyDetailsRepository;
     private $likeRepository;
     private $commentRepository;
+    private $abuseRepository;
 
     public function __construct(
         PostRepositoryInterface $postRepository,
         UserRepositoryInterface $userRepository,
         CompanyDetailsRepositoryInterface $companyDetailsRepository,
         LikeRepositoryInterface $likeRepository,
-        CommentRepositoryInterface $commentRepository
+        CommentRepositoryInterface $commentRepository,
+        AbuseRepositoryInterface $abuseRepository
     ) {
         parent::__construct();
         $this->postRepository = $postRepository;
@@ -38,12 +41,15 @@ class PostsController extends ApiController
         $this->companyDetailsRepository = $companyDetailsRepository;
         $this->likeRepository = $likeRepository;
         $this->commentRepository = $commentRepository;
+        $this->abuseRepository = $abuseRepository;
     }
 
     public function index(Request $request)
     {
         try {
-            $posts = $this->postRepository->list($request);
+            $posts = $this->postRepository->list($request)->transform(function ($post, $key) {
+                return $post->transform();
+            });;
             return _api_json($posts);
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
@@ -54,7 +60,7 @@ class PostsController extends ApiController
     public function show(Request $request, $id)
     {
         try {
-            $post = $this->postRepository->find($id);
+            $post = $this->postRepository->find($request, $id);
             if (!$post) {
                 $message = _lang('app.not_found');
                 return _api_json(new \stdClass(), ['message' => $message], 404);
@@ -65,7 +71,6 @@ class PostsController extends ApiController
             });
             return _api_json($post, ['comments' => $comments]);
         } catch (\Exception $ex) {
-            dd($ex);
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
         }
@@ -153,16 +158,33 @@ class PostsController extends ApiController
         }
     }
 
-    public function handleLike($id)
+    public function handleLike(Request $request,$id)
     {
         try {
-            $post = $this->postRepository->find($id);
+            $post = $this->postRepository->findSimple($id);
             if (!$post) {
                 $message = _lang('app.not_found');
                 return _api_json('', ['message' => $message], 404);
             }
             $this->likeRepository->createOrDelete($post);
             $message = _lang('app.updated_successfully');
+            return _api_json('', ['message' => $message]);
+        } catch (\Exception $ex) {
+            $message = _lang('app.something_went_wrong');
+            return _api_json('', ['message' => $message], 400);
+        }
+    }
+
+    public function abuse(Request $request,$id)
+    {
+        try {
+            $post = $this->postRepository->findSimple($id);
+            if (!$post) {
+                $message = _lang('app.not_found');
+                return _api_json('', ['message' => $message], 404);
+            }
+            $this->abuseRepository->create($post);
+            $message = _lang('app.reported_successfully');
             return _api_json('', ['message' => $message]);
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
