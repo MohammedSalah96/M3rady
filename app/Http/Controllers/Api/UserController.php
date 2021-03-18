@@ -5,22 +5,31 @@ namespace App\Http\Controllers\Api;
 use DB;
 use Validator;
 use Illuminate\Http\Request;
+use App\Helpers\Authorization;
 use App\Http\Controllers\ApiController;
-use App\Repositories\Api\CompanyDetails\CompanyDetailsRepositoryInterface;
-use App\Repositories\Api\Follower\FollowerRepositoryInterface;
 use App\Repositories\Api\User\UserRepositoryInterface;
+use App\Repositories\Api\Device\DeviceRepositoryInterface;
+use App\Repositories\Api\Follower\FollowerRepositoryInterface;
+use App\Repositories\Api\CompanyDetails\CompanyDetailsRepositoryInterface;
 
 class UserController extends ApiController {
 
     private $userRepository;
     private $companyDetailsRepository;
     private $followerRepository;
+    private $deviceRepository;
+    
 
-    public function __construct(UserRepositoryInterface $userRepository, CompanyDetailsRepositoryInterface $companyDetailsRepository, FollowerRepositoryInterface $followerRepository) {
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        CompanyDetailsRepositoryInterface $companyDetailsRepository,
+        FollowerRepositoryInterface $followerRepository,
+        DeviceRepositoryInterface $deviceRepository) {
         parent::__construct();
         $this->userRepository = $userRepository;
         $this->companyDetailsRepository = $companyDetailsRepository;
         $this->followerRepository = $followerRepository;
+        $this->deviceRepository = $deviceRepository;
     }
 
     public function getToken(Request $request)
@@ -28,7 +37,7 @@ class UserController extends ApiController {
         try {
             $oldToken = $request->header('authorization');
             if ($oldToken) {
-                $oldToken = \Authorization::validateToken($oldToken);
+                $oldToken = Authorization::validateToken($oldToken);
                 if ($oldToken) {
                     $newToken = new \stdClass();
                     $user = $this->userRepository->authUserCheck($oldToken->id);
@@ -148,7 +157,7 @@ class UserController extends ApiController {
 
     public function logout(Request $request) {
         try {
-            $this->userRepository->logout($request->input('device_id'));
+            $this->deviceRepository->logout($request->input('device_id'));
             return _api_json('');
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
@@ -159,7 +168,7 @@ class UserController extends ApiController {
     public function updateLang(Request $request)
     {
         try {
-            $this->userRepository->updateLang($request->input('device_id'));
+            $this->deviceRepository->updateLang($request->input('device_id'));
             return _api_json('');
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');

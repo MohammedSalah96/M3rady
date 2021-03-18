@@ -49,7 +49,7 @@ class PostsController extends ApiController
         try {
             $posts = $this->postRepository->list($request)->transform(function ($post, $key) {
                 return $post->transform();
-            });;
+            });
             return _api_json($posts);
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
@@ -127,7 +127,7 @@ class PostsController extends ApiController
             $post = $this->postRepository->findForAuth($id);
             if (!$post) {
                 $message = _lang('app.not_found');
-                return _api_json(new \stdClass(), ['message' => $message], 404);
+                return _api_json('', ['message' => $message], 404);
             }
             DB::beginTransaction();
             $this->postRepository->delete($post);

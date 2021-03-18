@@ -28,4 +28,18 @@ class DeviceRepository extends BaseRepository implements BaseRepositoryInterface
             ]
         );
     }
+
+    public function logout($deviceId)
+    {
+        $this->device->where('user_id', $this->authUser()->id)
+            ->where('device_id', $deviceId)
+            ->update(['device_token' => '']);
+    }
+
+    public function updateLang($deviceId)
+    {
+        $this->device->where('user_id', $this->authUser()->id)
+            ->where('device_id', $deviceId)
+            ->update(['lang' => $this->langCode]);
+    }
 }

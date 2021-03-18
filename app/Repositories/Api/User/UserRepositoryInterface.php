@@ -9,8 +9,6 @@ interface UserRepositoryInterface{
     public function register(Request $reuqest);
     public function checkAuth(array $credentials);
     public function issueToken($user);
-    public function logout($deviceId);
-    public function updateLang($deviceId);
     public function canPost();
 
     public function checkUserForResest($mobile);

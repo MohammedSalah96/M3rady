@@ -2,6 +2,9 @@
 
 namespace App\Traits;
 use Image;
+use App\Helpers\AUTHORIZATION;
+use App\Models\User;
+use Request;
 
 trait ModelTrait {
 
@@ -13,6 +16,18 @@ trait ModelTrait {
     protected static function getLangCode() {
         $lang_code = app()->getLocale();
         return $lang_code;
+    }
+
+    protected static function auth_user()
+    {
+        $token = Request::header('authorization');
+        $token = Authorization::validateToken($token);
+        $user = null;
+        if ($token) {
+            $user = User::find($token->id);
+        }
+
+        return $user;
     }
 
     protected static function transformCollection($items, $type = null, $extra_params = array()) {
@@ -38,7 +53,7 @@ trait ModelTrait {
     }
 
 
-    protected static function handleKeywordWhere($columns, $keyword) {
+    public function handleKeywordWhere($columns, $keyword) {
         $search_exploded = explode(" ", $keyword);
         $i = 0;
         $construct = " ";

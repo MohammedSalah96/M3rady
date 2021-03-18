@@ -17,8 +17,8 @@ class SocialUserRepository extends BaseRepository implements BaseRepositoryInter
     public function __construct(SocialUser $socialUser, User $user)
     {
         Parent::__construct();
-        $this->socialUser = $this->socialUser;
-        $this->user = $this->user;
+        $this->socialUser = $socialUser;
+        $this->user = $user;
     }
 
     public function checkSocialUser(array $credentials)

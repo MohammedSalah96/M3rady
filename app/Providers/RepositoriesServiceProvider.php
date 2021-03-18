@@ -69,6 +69,11 @@ class RepositoriesServiceProvider extends ServiceProvider
             'App\Repositories\Backend\PackageTranslation\PackageTranslationRepository'
         );
 
+        $this->app->bind(
+            'App\Repositories\Backend\Banner\BannerRepositoryInterface',
+            'App\Repositories\Backend\Banner\BannerRepository'
+        );
+
         /** api */
         $this->app->bind(
             'App\Repositories\Api\User\UserRepositoryInterface',
@@ -129,6 +134,18 @@ class RepositoriesServiceProvider extends ServiceProvider
         $this->app->bind(
             'App\Repositories\Api\PackageSubscription\PackageSubscriptionRepositoryInterface',
             'App\Repositories\Api\PackageSubscription\PackageSubscriptionRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\Company\CompanyRepositoryInterface',
+            'App\Repositories\Api\Company\CompanyRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\Banner\BannerRepositoryInterface',
+            'App\Repositories\Api\Banner\BannerRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\PriceRequest\PriceRequestRepositoryInterface',
+            'App\Repositories\Api\PriceRequest\PriceRequestRepository'
         );
        
   

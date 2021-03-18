@@ -24,6 +24,10 @@ return [
             'actions' => 'open,add,edit,delete'
         ],
         [
+            'name' =>    'banners',
+            'actions' => 'open,add,edit,delete'
+        ],
+        [
             'name' =>    'contact_messages',
             'actions' => 'open,show,delete'
         ],

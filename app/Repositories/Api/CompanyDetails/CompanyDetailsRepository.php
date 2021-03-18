@@ -46,7 +46,7 @@ class CompanyDetailsRepository extends BaseRepository implements BaseRepositoryI
 
     public function update(Request $request, $user)
     {
-        $companyDetails = $this->companyDetails->where('user_id', $user->id);
+        $companyDetails = $this->companyDetails->where('user_id', $user->id)->first();
         if ($request->input('name_ar')) {
             $companyDetails->name_ar = $request->input('name_ar');
         }
@@ -68,7 +68,7 @@ class CompanyDetailsRepository extends BaseRepository implements BaseRepositoryI
         if ($request->input('lng')) {
             $companyDetails->lng = $request->input('lng');
         }
-        if ($request->input('allowed_to_rate')) {
+        if ($request->input('allowed_to_rate') != "") {
             $companyDetails->allowed_to_rate = $request->input('allowed_to_rate');
         }
         if ($request->input('whatsapp')) {

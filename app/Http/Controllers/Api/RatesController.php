@@ -36,7 +36,6 @@ class RatesController extends ApiController {
             });
             return _api_json($rates);
         } catch (\Exception $ex) {
-            dd($ex);
             $message = _lang('app.something_went_wrong');
             return _api_json([], ['message' => $message], 400);
         }

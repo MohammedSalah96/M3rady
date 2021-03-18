@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Validator;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BackendController;
 use App\Repositories\Backend\ContactMessage\ContactMessageRepositoryInterface;
-use Validator;
 
 class ContactMessagesController extends BackendController {
 
@@ -128,7 +129,7 @@ class ContactMessagesController extends BackendController {
                             return $back;
                         })
                         ->editColumn('message', function ($item) {
-                            return str_limit($item->message, 300, '......'); ;
+                            return Str::limit($item->message, 300, '......'); ;
                         })
                         ->editColumn('created_at', function ($item) {
                             return $item->created_at->format('Y/m/d - h:i a');

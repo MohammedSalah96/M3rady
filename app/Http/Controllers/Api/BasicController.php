@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Repositories\Api\Category\CategoryRepositoryInterface;
+use App\Repositories\Api\Company\CompanyRepositoryInterface;
 use App\Repositories\Api\Location\LocationRepositoryInterface;
 use App\Repositories\Api\ContactMessage\ContactMessageRepositoryInterface;
 use App\Repositories\Api\PackageSubscription\PackageSubscriptionRepositoryInterface;
 use App\Repositories\Api\Package\PackageRepositoryInterface;
+use App\Repositories\Api\Post\PostRepositoryInterface;
+use App\Repositories\Api\Banner\BannerRepositoryInterface;
 use Validator;
 
 class BasicController extends ApiController {
@@ -28,6 +31,8 @@ class BasicController extends ApiController {
     private $contactMessage;
     private $packageSubscriptionRepository;
     private $packageRepository;
+    private $companyRepository;
+    private $postRepository;
     
 
     public function __construct(
@@ -35,7 +40,10 @@ class BasicController extends ApiController {
         CategoryRepositoryInterface $categoryRepository,
         ContactMessageRepositoryInterface $contactMessage,
         PackageSubscriptionRepositoryInterface $packageSubscriptionRepository,
-        PackageRepositoryInterface $packageRepository
+        PackageRepositoryInterface $packageRepository,
+        CompanyRepositoryInterface $companyRepository,
+        PostRepositoryInterface $postRepository,
+        BannerRepositoryInterface $bannerRepository
         
     )
     {
@@ -45,6 +53,27 @@ class BasicController extends ApiController {
         $this->contactMessage = $contactMessage;
         $this->packageSubscriptionRepository = $packageSubscriptionRepository;
         $this->packageRepository = $packageRepository;
+        $this->companyRepository = $companyRepository;
+        $this->postRepository = $postRepository;
+        $this->bannerRepository = $bannerRepository;
+    }
+
+    public function home(Request $request)
+    {
+        try {
+            $request->request->add(['feed' => true]);
+            $banners = $this->bannerRepository->list();
+            $posts = $this->postRepository->list($request)->transform(function ($post, $key) {
+                return $post->transform();
+            });
+            $companies = $this->companyRepository->list($request)->transform(function ($company, $key) {
+                return $company->transformCompaniesList();
+            });
+            return _api_json(['banners' => $banners, 'featured_companies' => $companies , 'posts' => $posts]);
+        } catch (\Exception $ex) {
+            $message = _lang('app.something_went_wrong');
+            return _api_json(new \stdClass(), ['message' => $message], 400);
+        }
     }
 
     public function getConfig()
@@ -52,10 +81,7 @@ class BasicController extends ApiController {
         try {
             $locations = $this->locationRepository->getTree();
             $categories = $this->categoryRepository->getTree();
-            $packages = $this->packageRepository->list()->transform(function($package, $key){
-                return $package->transform();
-            });
-            return _api_json(['locations' => $locations, 'categories' => $categories, 'packages' => $packages]);
+            return _api_json(['locations' => $locations, 'categories' => $categories]);
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
@@ -76,6 +102,19 @@ class BasicController extends ApiController {
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
             return _api_json('', ['message' => $message], 400);
+        }
+    }
+
+    public function packages(Request $request)
+    {
+        try {
+            $packages = $this->packageRepository->list()->transform(function ($package, $key) {
+                return $package->transform();
+            });
+            return _api_json($packages);
+        } catch (\Exception $ex) {
+            $message = _lang('app.something_went_wrong');
+            return _api_json([], ['message' => $message], 400);
         }
     }
 

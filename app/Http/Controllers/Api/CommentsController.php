@@ -62,7 +62,6 @@ class CommentsController extends ApiController {
             $message = _lang('app.posted_successfully');
             return _api_json($comment, ['message' => $message]);
         } catch (\Exception $ex) {
-            dd($ex);
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
         }

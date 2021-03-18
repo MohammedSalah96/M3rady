@@ -1,38 +1,39 @@
-var Categories = function() {
-var CategoriesGrid, parentId,image;
+var Banners = function() {
+var BannersGrid,image;
 
     var init = function() {
         $.extend(lang, newLang);
         $.extend(config, newConfig);
-        parentId = config.parentId;
         handleRecords();
         handleSubmit();
         kImage = new KTImageInput("kt_avatar");
     };
    
     var handleRecords = function() {
-        CategoriesGrid = $('#kt_datatable').DataTable({
+        BannersGrid = $('#kt_datatable').DataTable({
             "processing": true,
             responsive: true,
             "serverSide": true,
             "ajax": {
-                "url": config.admin_url + "/categories/data",
+                "url": config.admin_url + "/banners/data",
                 "type": "POST",
-                data: { parent_id: parentId, _token: $('input[name="_token"]').val() },
+                data: { _token: $('input[name="_token"]').val() },
             },
             "columns": [
                 {
-                    "data": "name",
-                    "name": "category_translations.name"
+                    "data": "image",
+                    "name": "banners.image",
+                    orderable: false,
+                    searchable: false
                 }, 
                 {
                     "data": "active",
-                    "name": "categories.active",
+                    "name": "banners.active",
                      orderable: false,
                 }, 
                 {
                     "data": "position",
-                    "name": "categories.position"
+                    "name": "banners.position"
                 }, 
                 {
                     "data": "options",
@@ -46,6 +47,10 @@ var CategoriesGrid, parentId,image;
             'columnDefs': [
                 { 
                     className: 'text-center', targets: [0,1,2,3] 
+                },
+                {
+                    "width": "30%",
+                    "targets": 0
                 }
             ],
             "oLanguage": { "sUrl": config.url + '/datatable-lang-' + config.lang_code + '.json' }
@@ -54,7 +59,7 @@ var CategoriesGrid, parentId,image;
     }
 
     var handleSubmit = function() {
-        $('#addEditCategoriesForm').validate({
+        $('#addEditBannersForm').validate({
             rules: {
                active: {
                     required: true
@@ -84,48 +89,38 @@ var CategoriesGrid, parentId,image;
             }
         });
 
-        var langs = JSON.parse(config.languages);
+        $('#addEditBannersForm .submit-form').click(function() {
 
-        for (var x = 0; x < langs.length; x++) {
-            var name = "input[name='name[" + langs[x] + "]']";
-            $(name).rules('add', {
-                required: true
-            });
-        }
-
-        $('#addEditCategoriesForm .submit-form').click(function() {
-
-            if ($('#addEditCategoriesForm').validate().form()) {
-                $('#addEditCategoriesForm .submit-form').prop('disabled', true);
-                $('#addEditCategoriesForm .submit-form').html('<i class="fas fa-circle-notch fa-spin"></i>');
+            if ($('#addEditBannersForm').validate().form()) {
+                $('#addEditBannersForm .submit-form').prop('disabled', true);
+                $('#addEditBannersForm .submit-form').html('<i class="fas fa-circle-notch fa-spin"></i>');
                 setTimeout(function() {
-                    $('#addEditCategoriesForm').submit();
+                    $('#addEditBannersForm').submit();
                 }, 1000);
             }
             return false;
         });
-        $('#addEditCategoriesForm input').keypress(function(e) {
+        $('#addEditBannersForm input').keypress(function(e) {
             if (e.which == 13) {
-                if ($('#addEditCategoriesForm').validate().form()) {
-                    $('#addEditCategoriesForm .submit-form').prop('disabled', true);
-                    $('#addEditCategoriesForm .submit-form').html('<i class="fas fa-circle-notch fa-spin"></i>');
+                if ($('#addEditBannersForm').validate().form()) {
+                    $('#addEditBannersForm .submit-form').prop('disabled', true);
+                    $('#addEditBannersForm .submit-form').html('<i class="fas fa-circle-notch fa-spin"></i>');
                     setTimeout(function() {
-                        $('#addEditCategoriesForm').submit();
+                        $('#addEditBannersForm').submit();
                     }, 1000);
                 }
                 return false;
             }
         });
 
-        $('#addEditCategoriesForm').submit(function() {
+        $('#addEditBannersForm').submit(function() {
             var id = $('#id').val();
-            var action = config.admin_url + '/categories';
+            var action = config.admin_url + '/banners';
             var formData = new FormData($(this)[0]);
             if (id != 0) {
                 formData.append('_method', 'PATCH');
-                action = config.admin_url + '/categories/' + id;
+                action = config.admin_url + '/banners/' + id;
             }
-            formData.append('parent_id', parentId);
             $.ajax({
                 url: action,
                 data: formData,
@@ -134,29 +129,24 @@ var CategoriesGrid, parentId,image;
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    $('#addEditCategoriesForm .submit-form').prop('disabled', false);
-                    $('#addEditCategoriesForm .submit-form').html(lang.save);
+                    $('#addEditBannersForm .submit-form').prop('disabled', false);
+                    $('#addEditBannersForm .submit-form').html(lang.save);
                     if (data.type == 'success') {
                         My.toast(data.message);
-                        CategoriesGrid.ajax.reload( null, false );
-                        Categories.empty();  
+                        BannersGrid.ajax.reload( null, false );
+                        Banners.empty();  
                     } else {
                         if (typeof data.errors !== 'undefined') {
                             for (i in data.errors) {
                                 var message = data.errors[i];
-                                if (i.startsWith('name')) {
-                                    var key_arr = i.split('.');
-                                    var key_text = key_arr[0] + '[' + key_arr[1] + ']';
-                                    i = key_text;
-                                }
                                 $('[name="' + i + '"]').closest('.form-group').find('.invalid-feedback').html(message).show();
                             }
                         }
                     }
                 },
                 error: function(xhr, textStatus, errorThrown) {
-                    $('#addEditCategoriesForm .submit-form').prop('disabled', false);
-                    $('#addEditCategoriesForm .submit-form').html(lang.save);
+                    $('#addEditBannersForm .submit-form').prop('disabled', false);
+                    $('#addEditBannersForm .submit-form').html(lang.save);
                     My.ajax_error_message(xhr);
                 },
                 dataType: "json",
@@ -175,7 +165,7 @@ var CategoriesGrid, parentId,image;
            var id = $(t).attr("data-id");
            My.editForm({
                element: t,
-               url: config.admin_url + '/categories/' + id + '/edit',
+               url: config.admin_url + '/banners/' + id + '/edit',
                data: {},
                success: function (data) {
                    $('[data-toggle="tooltip"]').tooltip('hide');
@@ -183,7 +173,7 @@ var CategoriesGrid, parentId,image;
                     for (var key in model) {
                         if (key == 'image') {
                             if (model[key] != "") {
-                                $('.image-input-wrapper').css('background-image','url('+config.url+'/public/uploads/categories/'+model[key]+')');
+                                $('.image-input-wrapper').css('background-image','url('+config.url+'/public/uploads/Banners/'+model[key]+')');
                                 $('#kt_avatar').removeClass();
                                 $('#kt_avatar').addClass('image-input image-input-outline image-input-changed');
                                 $('[data-action="cancel"]').css('display','flex');
@@ -193,13 +183,6 @@ var CategoriesGrid, parentId,image;
                         }
                        $('[name="'+key+'"]').val(model[key]);
                     }
-                    var translations = data.data.translations;
-                    for (var locale in translations) {
-                        for(var key in translations[locale]){
-                            if(key == 'locale') continue;
-                            $('[name="'+key+'['+locale+']"]').val(translations[locale][key]);
-                        } 
-                    }
                }
            });
         },
@@ -208,10 +191,10 @@ var CategoriesGrid, parentId,image;
                 var id = $(t).attr("data-id");
                 My.deleteForm({
                     element: t,
-                    url: config.admin_url + '/categories/' + id,
+                    url: config.admin_url + '/banners/' + id,
                     data: { _method: 'DELETE', _token: $('input[name="_token"]').val() },
                     success: function(data) {
-                        CategoriesGrid.ajax.reload( null, false );
+                        BannersGrid.ajax.reload( null, false );
                         $('[data-toggle="tooltip"]').tooltip('hide');
                     }
                 });
@@ -237,5 +220,5 @@ var CategoriesGrid, parentId,image;
 }();
 
 jQuery(document).ready(function() {
-    Categories.init();
+    Banners.init();
 });

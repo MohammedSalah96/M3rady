@@ -115,7 +115,7 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                     ->where('package_subscriptions.id', \DB::raw('(select max(id) from package_subscriptions where user_id = users.id)'))
                                     ->whereDate('package_subscriptions.end_date', '>=', date('Y-m-d'));
                             });
-                            if ($request->input('company_id')) {
+                            if ($request->input('company_id')) {                     
                                 $posts->where('posts.user_id', $request->input('company_id'));
                             }
                             if ($user) {
@@ -167,6 +167,9 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                         if ($request->input('city')) {
                                             $posts->where('users.city_id', $request->input('city'));
                                         }
+                                        if ($request->input('search')) {
+                                            $posts->whereRaw($this->post->handleKeywordWhere(['company_details.company_id'],$request->input('search')));
+                                        }
                                         if ($request->input('order_by')) {
                                             switch ($request->input('order_by')) {
                                                 case 1:
@@ -177,7 +180,7 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                                     break;
                                                 
                                                 case 3:
-                                                $posts->orderBy('package_subscriptions.id')
+                                                $posts->orderByRaw('ISNULL(is_featured)')
                                                     ->orderBy('posts.created_at','desc');
                                                     
                                                     break;

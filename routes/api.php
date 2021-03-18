@@ -23,6 +23,8 @@
 
   Route::get('get_token', 'UserController@getToken');
   Route::get('config', 'BasicController@getConfig');
+  Route::get('packages', 'BasicController@packages');
+  Route::get('home', 'BasicController@home');
   Route::post('contact_message', 'BasicController@contactMessage');
 
   Route::get('posts/{id}', 'PostsController@show');
@@ -30,6 +32,9 @@
 
   Route::get('comments', 'CommentsController@index');
   Route::get('rates', 'RatesController@index');
+
+  Route::get('companies', 'CompaniesController@index');
+  Route::get('companies/{id}', 'CompaniesController@show');
 
   Route::group(['middleware' => 'jwt.auth'], function () {
    
@@ -56,6 +61,8 @@
     Route::delete('rates/{id}', 'RatesController@destroy');
 
     Route::post('subscribe','BasicController@subscribe');
+
+    Route::resource('price_requests', 'PriceRequestsController');
 
   });
  

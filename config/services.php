@@ -35,10 +35,15 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
-    'facebook' => [
-        'client_id' => '2170570492972312',         
-        'client_secret' => 'f72c89d9602989a66163be1f48929afe', 
-        'redirect' => 'http://localhost/ga3aaan/'.app()->getLocale().'/login/facebook/callback',
+    'google' => [
+        'client_id' => '547567848746-2qdt39trustsadvqf1ijl5vb5p467goc.apps.googleusercontent.com',         
+        'client_secret' => '', 
+        'redirect' => '',
+    ],
+    'apple' => [
+        'client_id' => '2170570492972312',
+        'client_secret' => '',
+        'redirect' => '',
     ],
 
 ];

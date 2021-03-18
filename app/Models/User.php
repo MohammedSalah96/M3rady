@@ -17,7 +17,9 @@ class User extends Authenticatable implements UserInterface {
         'mobile' => 'string',
         'country_id' => 'integer',
         'city_id' => 'integer',
-        'image' => 'string'
+        'image' => 'string',
+        'company_rates_count' => 'integer',
+        'allowed_to_rate' => 'boolean'
     ];
 
     public $types = [
@@ -68,7 +70,7 @@ class User extends Authenticatable implements UserInterface {
             $transformer->name = $this->name;
         }
         $transformer->email = $this->email;
-        $transformer->mobile = $this->mobile;
+        $transformer->mobile = $this->mobile ?: "";
         $transformer->country_id = $this->country_id;
         $transformer->city_id = $this->city_id;
         if (filter_var($this->image, FILTER_VALIDATE_URL)) {
@@ -88,7 +90,7 @@ class User extends Authenticatable implements UserInterface {
                     $transformer->allowed_to_post = false;
                 }
             }
-            $transformer->is_featured = $userSubscription->end_date >= date('Y-m-d') ? true : false;
+            $transformer->is_featured = $userSubscription && $userSubscription->end_date >= date('Y-m-d') ? true : false;
             $transformer->company_details = $companyDetails->transform();
             $transformer->posts_count = $this->posts()->count();
             $transformer->followers_count = $this->followers()->count();
@@ -97,6 +99,48 @@ class User extends Authenticatable implements UserInterface {
         $transformer->likes_count = $this->likes()->count();
         return $transformer;
     }
+
+    public function transformCompaniesList()
+    {
+        $transformer = new \stdClass();
+        $transformer->id = $this->id;
+        $transformer->name = $this->company_id;
+        $transformer->image = url("public/uploads/users/$this->image");
+        $transformer->country = $this->country;
+        $transformer->city = $this->city;
+        $transformer->is_featured = $this->is_featured ? true : false;
+        return $transformer;
+    }
+
+    public function transformCompanyDetails()
+    {
+        $transformer = new \stdClass();
+        $transformer->id = $this->id;
+        $transformer->name = $this->company_id;
+        $transformer->image = url("public/uploads/users/$this->image");
+        $transformer->country = $this->country;
+        $transformer->city = $this->city;
+        $transformer->rates_count = $this->company_rates_count;
+        $transformer->allowed_to_rate = $this->allowed_to_rate;
+        $transformer->is_featured = $this->is_featured ? true : false;
+        if ($this->auth_user()) {
+            $transformer->is_rated = $this->is_rated ? true : false;
+            $transformer->is_followed = $this->is_followed ? true : false;
+        }
+        $transformer->name_ar = $this->name_ar;
+        $transformer->name_en = $this->name_en;
+        $transformer->description = $this->description;
+        $transformer->mobile = $this->mobile;
+        $transformer->whatsapp = $this->whatsapp;
+        $transformer->facebook = $this->facebook;
+        $transformer->twitter = $this->twitter;
+        $transformer->website = $this->website;
+        $transformer->lat = $this->lat;
+        $transformer->lng = $this->lng;
+
+        return $transformer;
+    }
+    
 
    
     

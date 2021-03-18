@@ -132,17 +132,5 @@ class UserRepository extends BaseRepository implements BaseRepositoryInterface, 
         return $user;
     }
 
-    public function logout($deviceId)
-    {
-       $this->device->where('user_id', $this->authUser()->id)
-                    ->where('device_id', $deviceId)
-                    ->update(['device_token' => '']);
-    }
-
-    public function updateLang($deviceId)
-    {
-        $this->device->where('user_id', $this->authUser()->id)
-                     ->where('device_id', $deviceId)
-                     ->update(['lang' => $this->langCode]);
-    }
+    
 }

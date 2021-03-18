@@ -47,6 +47,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
 
     Route::resource('packages', 'PackagesController');
     Route::post('packages/data', 'PackagesController@data');
+
+    Route::resource('banners', 'BannersController');
+    Route::post('banners/data', 'BannersController@data');
     
 
     
