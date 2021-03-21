@@ -19,7 +19,8 @@ class User extends Authenticatable implements UserInterface {
         'city_id' => 'integer',
         'image' => 'string',
         'company_rates_count' => 'integer',
-        'allowed_to_rate' => 'boolean'
+        'allowed_to_rate' => 'boolean',
+        'type' => 'integer'
     ];
 
     public $types = [
@@ -78,6 +79,7 @@ class User extends Authenticatable implements UserInterface {
         } else {
             $transformer->image = url("public/uploads/users/$this->image");
         }
+        $transformer->type = $this->type;
         if ($this->type == $this->types['company']) {
             $companyDetails = $this->companyDetails;
             $userSubscription = $this->subscriptions()->latest()->first();

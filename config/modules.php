@@ -12,6 +12,10 @@ return [
             'actions' => 'open,add,edit,delete'
         ],
         [
+            'name' =>    'welcome_screens',
+            'actions' => 'open,add,edit,delete'
+        ],
+        [
             'name' =>    'categories',
             'actions' => 'open,add,edit,delete'
         ],

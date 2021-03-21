@@ -74,6 +74,16 @@ class RepositoriesServiceProvider extends ServiceProvider
             'App\Repositories\Backend\Banner\BannerRepository'
         );
 
+        $this->app->bind(
+            'App\Repositories\Backend\WelcomeScreen\WelcomeScreenRepositoryInterface',
+            'App\Repositories\Backend\WelcomeScreen\WelcomeScreenRepository'
+        );
+
+        $this->app->bind(
+            'App\Repositories\Backend\WelcomeScreenTranslation\WelcomeScreenTranslationRepositoryInterface',
+            'App\Repositories\Backend\WelcomeScreenTranslation\WelcomeScreenTranslationRepository'
+        );
+
         /** api */
         $this->app->bind(
             'App\Repositories\Api\User\UserRepositoryInterface',
@@ -146,6 +156,10 @@ class RepositoriesServiceProvider extends ServiceProvider
         $this->app->bind(
             'App\Repositories\Api\PriceRequest\PriceRequestRepositoryInterface',
             'App\Repositories\Api\PriceRequest\PriceRequestRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\WelcomeScreen\WelcomeScreenRepositoryInterface',
+            'App\Repositories\Api\WelcomeScreen\WelcomeScreenRepository'
         );
        
   

@@ -26,6 +26,7 @@
   Route::get('packages', 'BasicController@packages');
   Route::get('home', 'BasicController@home');
   Route::post('contact_message', 'BasicController@contactMessage');
+  Route::get('welcome_screens', 'BasicController@welcomeScreens');
 
   Route::get('posts/{id}', 'PostsController@show');
   Route::get('posts', 'PostsController@index');

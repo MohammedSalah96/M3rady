@@ -50,6 +50,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
 
     Route::resource('banners', 'BannersController');
     Route::post('banners/data', 'BannersController@data');
+
+    Route::resource('welcome_screens', 'WelcomeScreensController');
+    Route::post('welcome_screens/data', 'WelcomeScreensController@data');
     
 
     

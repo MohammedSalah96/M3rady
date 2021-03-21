@@ -1,5 +1,5 @@
 var Packages = function() {
-var PackagesGrid, parentId,image;
+var PackagesGrid;
 
     var init = function() {
         $.extend(lang, newLang);

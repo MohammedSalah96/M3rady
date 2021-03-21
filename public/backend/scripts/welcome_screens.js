@@ -1,5 +1,5 @@
-var Banners = function() {
-var BannersGrid,image;
+var WelcomeScreens = function() {
+var WelcomeScreensGrid;
 
     var init = function() {
         $.extend(lang, newLang);
@@ -10,30 +10,35 @@ var BannersGrid,image;
     };
    
     var handleRecords = function() {
-        BannersGrid = $('#kt_datatable').DataTable({
+        WelcomeScreensGrid = $('#kt_datatable').DataTable({
             "processing": true,
             responsive: true,
             "serverSide": true,
             "ajax": {
-                "url": config.admin_url + "/banners/data",
+                "url": config.admin_url + "/welcome_screens/data",
                 "type": "POST",
                 data: { _token: $('input[name="_token"]').val() },
             },
             "columns": [
                 {
                     "data": "image",
-                    "name": "banners.image",
+                    "name": "welcome_screens.image",
                     orderable: false,
                     searchable: false
-                }, 
+                },
+                {
+                    "data": "description",
+                    "name": "welcome_screen_translations.description",
+                    orderable: false                
+                },
                 {
                     "data": "active",
-                    "name": "banners.active",
+                    "name": "welcome_screens.active",
                      orderable: false,
                 }, 
                 {
                     "data": "position",
-                    "name": "banners.position"
+                    "name": "welcome_screens.position"
                 }, 
                 {
                     "data": "options",
@@ -46,7 +51,7 @@ var BannersGrid,image;
             },
             'columnDefs': [
                 { 
-                    className: 'text-center', targets: [0,1,2,3] 
+                    className: 'text-center', targets: [0,1,2,3,4] 
                 },
                 {
                     "width": "30%",
@@ -59,7 +64,7 @@ var BannersGrid,image;
     }
 
     var handleSubmit = function() {
-        $('#addEditBannersForm').validate({
+        $('#addEditWelcomeScreensForm').validate({
             rules: {
                active: {
                     required: true
@@ -77,7 +82,7 @@ var BannersGrid,image;
                 },
                 position:{
                     required: lang.required_rule
-                },
+                }
             },
             highlight: function(element) { // hightlight error inputs
             },
@@ -89,37 +94,45 @@ var BannersGrid,image;
             }
         });
 
-        $('#addEditBannersForm .submit-form').click(function() {
+        var langs = JSON.parse(config.languages);
+        for (var x = 0; x < langs.length; x++) {
+            var description = "textarea[name='description[" + langs[x] + "]']";
+            $(description).rules('add', {
+                required: true
+            });
+        }
 
-            if ($('#addEditBannersForm').validate().form()) {
-                $('#addEditBannersForm .submit-form').prop('disabled', true);
-                $('#addEditBannersForm .submit-form').html('<i class="fas fa-circle-notch fa-spin"></i>');
+        $('#addEditWelcomeScreensForm .submit-form').click(function() {
+
+            if ($('#addEditWelcomeScreensForm').validate().form()) {
+                $('#addEditWelcomeScreensForm .submit-form').prop('disabled', true);
+                $('#addEditWelcomeScreensForm .submit-form').html('<i class="fas fa-circle-notch fa-spin"></i>');
                 setTimeout(function() {
-                    $('#addEditBannersForm').submit();
+                    $('#addEditWelcomeScreensForm').submit();
                 }, 1000);
             }
             return false;
         });
-        $('#addEditBannersForm input').keypress(function(e) {
+        $('#addEditWelcomeScreensForm input').keypress(function(e) {
             if (e.which == 13) {
-                if ($('#addEditBannersForm').validate().form()) {
-                    $('#addEditBannersForm .submit-form').prop('disabled', true);
-                    $('#addEditBannersForm .submit-form').html('<i class="fas fa-circle-notch fa-spin"></i>');
+                if ($('#addEditWelcomeScreensForm').validate().form()) {
+                    $('#addEditWelcomeScreensForm .submit-form').prop('disabled', true);
+                    $('#addEditWelcomeScreensForm .submit-form').html('<i class="fas fa-circle-notch fa-spin"></i>');
                     setTimeout(function() {
-                        $('#addEditBannersForm').submit();
+                        $('#addEditWelcomeScreensForm').submit();
                     }, 1000);
                 }
                 return false;
             }
         });
 
-        $('#addEditBannersForm').submit(function() {
+        $('#addEditWelcomeScreensForm').submit(function() {
             var id = $('#id').val();
-            var action = config.admin_url + '/banners';
+            var action = config.admin_url + '/welcome_screens';
             var formData = new FormData($(this)[0]);
             if (id != 0) {
                 formData.append('_method', 'PATCH');
-                action = config.admin_url + '/banners/' + id;
+                action = config.admin_url + '/welcome_screens/' + id;
             }
             $.ajax({
                 url: action,
@@ -129,24 +142,30 @@ var BannersGrid,image;
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    $('#addEditBannersForm .submit-form').prop('disabled', false);
-                    $('#addEditBannersForm .submit-form').html(lang.save);
+                    $('#addEditWelcomeScreensForm .submit-form').prop('disabled', false);
+                    $('#addEditWelcomeScreensForm .submit-form').html(lang.save);
                     if (data.type == 'success') {
                         My.toast(data.message);
-                        BannersGrid.ajax.reload( null, false );
-                        Banners.empty();  
+                        WelcomeScreensGrid.ajax.reload( null, false );
+                        WelcomeScreens.empty();  
+                        $("html, body").animate({ scrollTop: $(document).height() }, 1000);
                     } else {
                         if (typeof data.errors !== 'undefined') {
                             for (i in data.errors) {
                                 var message = data.errors[i];
+                                if (i.startsWith('description')) {
+                                    var key_arr = i.split('.');
+                                    var key_text = key_arr[0] + '[' + key_arr[1] + ']';
+                                    i = key_text;
+                                }
                                 $('[name="' + i + '"]').closest('.form-group').find('.invalid-feedback').html(message).show();
                             }
                         }
                     }
                 },
                 error: function(xhr, textStatus, errorThrown) {
-                    $('#addEditBannersForm .submit-form').prop('disabled', false);
-                    $('#addEditBannersForm .submit-form').html(lang.save);
+                    $('#addEditWelcomeScreensForm .submit-form').prop('disabled', false);
+                    $('#addEditWelcomeScreensForm .submit-form').html(lang.save);
                     My.ajax_error_message(xhr);
                 },
                 dataType: "json",
@@ -165,7 +184,7 @@ var BannersGrid,image;
            var id = $(t).attr("data-id");
            My.editForm({
                element: t,
-               url: config.admin_url + '/banners/' + id + '/edit',
+               url: config.admin_url + '/welcome_screens/' + id + '/edit',
                data: {},
                success: function (data) {
                    $('[data-toggle="tooltip"]').tooltip('hide');
@@ -173,16 +192,24 @@ var BannersGrid,image;
                     for (var key in model) {
                         if (key == 'image') {
                             if (model[key] != "") {
-                                $('.image-input-wrapper').css('background-image','url('+config.url+'/public/uploads/banners/'+model[key]+')');
+                                $('.image-input-wrapper').css('background-image', 'url(' + config.url + '/public/uploads/welcome_screens/' + model[key] + ')');
                                 $('#kt_avatar').removeClass();
                                 $('#kt_avatar').addClass('image-input image-input-outline image-input-changed');
-                                $('[data-action="cancel"]').css('display','flex');
-                                $('[data-action="remove"]').css('display','flex');
+                                $('[data-action="cancel"]').css('display', 'flex');
+                                $('[data-action="remove"]').css('display', 'flex');
                             }
                             continue;
                         }
                        $('[name="'+key+'"]').val(model[key]);
                     }
+                    var translations = data.data.translations;
+                    for (var locale in translations) {
+                        for(var key in translations[locale]){
+                            if(key == 'locale') continue;
+                            $('[name="'+key+'['+locale+']"]').val(translations[locale][key]);
+                        } 
+                    }
+                    window.scrollTo({top: 0, behavior: 'smooth'});
                }
            });
         },
@@ -191,10 +218,10 @@ var BannersGrid,image;
                 var id = $(t).attr("data-id");
                 My.deleteForm({
                     element: t,
-                    url: config.admin_url + '/banners/' + id,
+                    url: config.admin_url + '/welcome_screens/' + id,
                     data: { _method: 'DELETE', _token: $('input[name="_token"]').val() },
                     success: function(data) {
-                        BannersGrid.ajax.reload( null, false );
+                        WelcomeScreensGrid.ajax.reload( null, false );
                         $('[data-toggle="tooltip"]').tooltip('hide');
                     }
                 });
@@ -220,5 +247,5 @@ var BannersGrid,image;
 }();
 
 jQuery(document).ready(function() {
-    Banners.init();
+    WelcomeScreens.init();
 });

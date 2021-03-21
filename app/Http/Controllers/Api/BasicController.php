@@ -12,6 +12,8 @@ use App\Repositories\Api\PackageSubscription\PackageSubscriptionRepositoryInterf
 use App\Repositories\Api\Package\PackageRepositoryInterface;
 use App\Repositories\Api\Post\PostRepositoryInterface;
 use App\Repositories\Api\Banner\BannerRepositoryInterface;
+use App\Repositories\Api\WelcomeScreen\WelcomeScreenRepositoryInterface;
+
 use Validator;
 
 class BasicController extends ApiController {
@@ -43,7 +45,8 @@ class BasicController extends ApiController {
         PackageRepositoryInterface $packageRepository,
         CompanyRepositoryInterface $companyRepository,
         PostRepositoryInterface $postRepository,
-        BannerRepositoryInterface $bannerRepository
+        BannerRepositoryInterface $bannerRepository,
+        WelcomeScreenRepositoryInterface $welcomeScreenRepository
         
     )
     {
@@ -56,6 +59,20 @@ class BasicController extends ApiController {
         $this->companyRepository = $companyRepository;
         $this->postRepository = $postRepository;
         $this->bannerRepository = $bannerRepository;
+        $this->welcomeScreenRepository = $welcomeScreenRepository;
+    }
+
+    public function welcomeScreens(Request $request)
+    {
+        try {
+            $welcomeScreens = $this->welcomeScreenRepository->list()->transform(function ($welcomeScreen, $key) {
+                return $welcomeScreen->transform();
+            });
+            return _api_json($welcomeScreens);
+        } catch (\Exception $ex) {
+            $message = _lang('app.something_went_wrong');
+            return _api_json([], ['message' => $message], 400);
+        }
     }
 
     public function home(Request $request)
