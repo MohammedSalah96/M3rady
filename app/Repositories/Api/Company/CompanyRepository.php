@@ -19,8 +19,9 @@ class CompanyRepository extends BaseRepository implements BaseRepositoryInterfac
     }
 
     public function list(Request $request){
+        $user = $this->authUser();
         $companies =  $this->company->join('company_details','users.id','=', 'company_details.user_id')
-                                ->leftJoin('package_subscriptions', function ($query) {
+                                ->join('package_subscriptions', function ($query) {
                                     $query->on('users.id', '=', 'package_subscriptions.user_id')
                                         ->where('package_subscriptions.id', \DB::raw('(select max(id) from package_subscriptions where user_id = users.id)'))
                                         ->whereDate('package_subscriptions.end_date', '>=', date('Y-m-d'));
@@ -32,6 +33,11 @@ class CompanyRepository extends BaseRepository implements BaseRepositoryInterfac
                                     $query->on('users.city_id','=','city_translations.location_id')
                                     ->where('city_translations.locale',$this->langCode);
                                 });
+                                
+                                if ($user->type == $user->types['company']) {
+                                    $companies->where('users.id','<>',$user->id);
+                                }
+                                
                                 if (!$request->input('feed')) {
                                      if ($request->input('country')) {
                                     $companies->where('users.country_id',$request->input('country'));
@@ -51,14 +57,14 @@ class CompanyRepository extends BaseRepository implements BaseRepositoryInterfac
                                         'city_translations.name as city',
                                         'package_subscriptions.id as is_featured');
         if ($request->input('feed')) {
-             $companies = $companies->whereNotNull('package_subscriptions.id')->get();
+             $companies = $companies->get();
             if ($companies->count() > 4) {
                return $companies->random(4);
             }else{
                 return $companies;
             }
         }
-        return $companies = $companies->orderByRaw('ISNULL(is_featured)')->paginate($this->limit);
+        return $companies = $companies->paginate($this->limit);
     }
 
     public function find($id)
@@ -69,6 +75,7 @@ class CompanyRepository extends BaseRepository implements BaseRepositoryInterfac
             'users.id',
             'users.image',
             'users.mobile',
+            'users.email',
             'package_subscriptions.id as is_featured',
             'country_translations.name as country',
             'city_translations.name as city',

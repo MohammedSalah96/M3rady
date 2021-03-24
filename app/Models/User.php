@@ -119,6 +119,7 @@ class User extends Authenticatable implements UserInterface {
         $transformer = new \stdClass();
         $transformer->id = $this->id;
         $transformer->name = $this->company_id;
+        $transformer->email = $this->email;
         $transformer->image = url("public/uploads/users/$this->image");
         $transformer->country = $this->country;
         $transformer->city = $this->city;

@@ -118,6 +118,7 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                             if ($request->input('company_id')) {                     
                                 $posts->where('posts.user_id', $request->input('company_id'));
                             }
+                            
                             if ($user) {
                               
                                 $posts->leftJoin('abuses',function($query) use($user){
@@ -144,11 +145,14 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                    
                                 ]);
                                 if ($user->type == $user->types['company']) {
+                                    if (!$id && !$request->input('mine') && !$request->input('likes')) {
+                                        $posts->where('posts.user_id','<>',$user->id);
+                                    }
                                     $columns[] = \DB::raw('(CASE WHEN posts.user_id = ' . $user->id . ' THEN 1 ELSE 0 END) as is_mine');
                                 }
                             }
                             if ($request->input('feed')) {
-                                if ($user) {
+                                if ($user && !$request->input('category')) {
                                     $followings = $user->followings()->get()->pluck('following_id')->toArray();
                                     $posts->whereIn('posts.user_id', $followings);
                                 }
@@ -160,7 +164,14 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                 if ($request->input('likes')) {
                                     $posts->orderBy('likes.created_at','desc');
                                 }else{
+                                    
                                     if ($request->input('feed')) {
+                                        if ($request->input('category')) {                     
+                                            $posts->where('company_details.sub_category_id', $request->input('category'))
+                                            ->where('posts.id',\DB::raw('(select max(id) from posts where posts.user_id = users.id)'))
+                                            ->orderByRaw('ISNULL(is_featured)')
+                                            ->orderBy('posts.created_at','desc');
+                                        }
                                         if ($request->input('country')) {
                                             $posts->where('users.country_id', $request->input('country'));
                                         }

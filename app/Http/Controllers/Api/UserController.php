@@ -161,7 +161,7 @@ class UserController extends ApiController {
             return _api_json('');
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
-            return _api_json(new \stdClass(), ['message' => $message], 400);
+            return _api_json('', ['message' => $message], 400);
         }
     }
 
@@ -172,7 +172,7 @@ class UserController extends ApiController {
             return _api_json('');
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
-            return _api_json(new \stdClass(), ['message' => $message], 400);
+            return _api_json('', ['message' => $message], 400);
         }
     }
 

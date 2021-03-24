@@ -122,7 +122,6 @@ class RegisterController extends ApiController {
             
         } catch (\Exception $ex) {
             DB::rollback();
-            dd($ex);
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
         }
