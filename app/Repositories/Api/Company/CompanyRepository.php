@@ -34,7 +34,7 @@ class CompanyRepository extends BaseRepository implements BaseRepositoryInterfac
                                     ->where('city_translations.locale',$this->langCode);
                                 });
                                 
-                                if ($user->type == $user->types['company']) {
+                                if ($user && $user->type == $user->types['company']) {
                                     $companies->where('users.id','<>',$user->id);
                                 }
                                 

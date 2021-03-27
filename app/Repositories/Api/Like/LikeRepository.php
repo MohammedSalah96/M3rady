@@ -22,11 +22,13 @@ class LikeRepository extends BaseRepository implements BaseRepositoryInterface, 
         $liked = $this->like->where('post_id',$post->id)->where('user_id',$this->authUser()->id)->first();
         if ($liked) {
             $liked->delete();
+            return false;
         }else{
             $this->like->create([
                 'user_id' => $this->authUser()->id,
                 'post_id' => $post->id,
             ]);
+            return true;
         }
     }
 }

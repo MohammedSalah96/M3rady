@@ -31,6 +31,12 @@ class LocationRepository extends BaseRepository implements BaseRepositoryInterfa
       return $locations = $locations->select('locations.*', 'location_translations.name')->get();
    }
 
+   public function getByParent($parentId = 0){
+      return $this->all([
+         ['parent_id', '=', $parentId]
+      ]);
+   }
+
    public function tree($id)
    {
       $tree = null;

@@ -6,13 +6,13 @@ use Auth;
 
 class BaseRepository { 
     
-    protected $user;
+    protected $authUser;
     protected $languages;
     protected $langCode;
 
     public function __construct()
     {
-        $this->user = Auth::guard('admin')->user();
+        $this->authUser = Auth::guard('admin')->user();
         $this->languages = array_keys(\Config::get('app.locales'));
         if (\Cookie::get('AdminLang') !== null) {
             try {

@@ -13,7 +13,7 @@ trait ModelTrait {
     protected static $distance = 1000000;
     protected $sizes;
 
-    protected static function getLangCode() {
+    protected function getLangCode() {
         $lang_code = app()->getLocale();
         return $lang_code;
     }

@@ -84,6 +84,16 @@ class RepositoriesServiceProvider extends ServiceProvider
             'App\Repositories\Backend\WelcomeScreenTranslation\WelcomeScreenTranslationRepository'
         );
 
+        $this->app->bind(
+            'App\Repositories\Backend\User\UserRepositoryInterface',
+            'App\Repositories\Backend\User\UserRepository'
+        );
+
+        $this->app->bind(
+            'App\Repositories\Backend\CompanyDetails\CompanyDetailsRepositoryInterface',
+            'App\Repositories\Backend\CompanyDetails\CompanyDetailsRepository'
+        );
+
         /** api */
         $this->app->bind(
             'App\Repositories\Api\User\UserRepositoryInterface',
@@ -160,6 +170,10 @@ class RepositoriesServiceProvider extends ServiceProvider
         $this->app->bind(
             'App\Repositories\Api\WelcomeScreen\WelcomeScreenRepositoryInterface',
             'App\Repositories\Api\WelcomeScreen\WelcomeScreenRepository'
+        );
+        $this->app->bind(
+            'App\Repositories\Api\Notification\NotificationRepositoryInterface',
+            'App\Repositories\Api\Notification\NotificationRepository'
         );
        
   

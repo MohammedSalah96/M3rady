@@ -19,7 +19,7 @@ class GroupRepository extends BaseRepository implements BaseRepositoryInterface,
    
     public function all()
     {
-       return $this->group->where('type',1)->where('created_by', $this->user->id)->get();
+       return $this->group->where('type',1)->where('created_by', $this->authUser->id)->get();
     }
 
     public function find($id, array $conditions = [])
@@ -36,7 +36,7 @@ class GroupRepository extends BaseRepository implements BaseRepositoryInterface,
         $group->name = $request->input('name');
         $group->permissions = json_encode($request->input('group_options'));
         $group->active = $request->input('active');
-        $group->created_by = $this->user->id;
+        $group->created_by = $this->authUser->id;
         $group->save();
 
         return $group;
@@ -60,7 +60,7 @@ class GroupRepository extends BaseRepository implements BaseRepositoryInterface,
     public function dataTable(Request $request)
     {
         return $this->group->where('type', 1)
-                            //->where('created_by', $this->user->id)
+                            //->where('created_by', $this->authUser->id)
                             ->select('*');
     }
 

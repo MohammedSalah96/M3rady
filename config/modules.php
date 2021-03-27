@@ -12,6 +12,14 @@ return [
             'actions' => 'open,add,edit,delete'
         ],
         [
+            'name' =>    'clients',
+            'actions' => 'open,add,edit,delete'
+        ],
+        [
+            'name' =>    'companies',
+            'actions' => 'open,add,edit,delete'
+        ],
+        [
             'name' =>    'welcome_screens',
             'actions' => 'open,add,edit,delete'
         ],

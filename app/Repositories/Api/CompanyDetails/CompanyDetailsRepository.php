@@ -68,6 +68,7 @@ class CompanyDetailsRepository extends BaseRepository implements BaseRepositoryI
         if ($request->input('lng')) {
             $companyDetails->lng = $request->input('lng');
         }
+       
         if ($request->input('allowed_to_rate') != "") {
             $companyDetails->allowed_to_rate = $request->input('allowed_to_rate');
         }

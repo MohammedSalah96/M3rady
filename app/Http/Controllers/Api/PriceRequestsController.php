@@ -6,6 +6,7 @@ use DB;
 use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
+use App\Repositories\Api\Notification\NotificationRepositoryInterface;
 use App\Repositories\Api\PriceRequest\PriceRequestRepositoryInterface;
 
 class PriceRequestsController extends ApiController
@@ -25,10 +26,13 @@ class PriceRequestsController extends ApiController
     ];
 
     private $priceRequestRepository;
+    private $notificationRepository;
+    
 
-    public function __construct(PriceRequestRepositoryInterface $priceRequestRepository) {
+    public function __construct(PriceRequestRepositoryInterface $priceRequestRepository, NotificationRepositoryInterface $notificationRepository) {
         parent::__construct();
         $this->priceRequestRepository = $priceRequestRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     public function index(Request $request)
@@ -73,10 +77,14 @@ class PriceRequestsController extends ApiController
                 $errors = $validator->errors()->toArray();
                 return _api_json('', ['errors' => $errors], 400);
             } 
-            $this->priceRequestRepository->create($request);
+            DB::beginTransaction();
+            $priceRequest = $this->priceRequestRepository->create($request);
+            $this->notificationRepository->send($request->input('company'), $this->notificationRepository->types['price_request'], $priceRequest->id);
+            DB::commit();
             $message = _lang('app.requested_successfully');
             return _api_json('',['message' => $message]);
         } catch (\Exception $ex) {
+            DB::rollback();
             $message = _lang('app.something_went_wrong');
             return _api_json('', ['message' => $message], 400);
         }
@@ -95,10 +103,14 @@ class PriceRequestsController extends ApiController
                 $message = _lang('app.not_found');
                 return _api_json(new \stdClass(), ['message' => $message], 404);
             }
+            DB::beginTransaction();
             $this->priceRequestRepository->update($request, $priceRequest);
+            $this->notificationRepository->send($priceRequest->user_id, $this->notificationRepository->types['price_request_reply'], $priceRequest->id);
+            DB::commit();
             $message = _lang('app.updated_successfully');
             return _api_json(new \stdClass(), ['message' => $message]);
         } catch (\Exception $ex) {
+            DB::rollback();
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
         }

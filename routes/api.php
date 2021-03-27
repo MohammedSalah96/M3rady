@@ -46,6 +46,7 @@
     Route::post('follow/{id}', 'UserController@handleFollow');
     Route::get('followings', 'UserController@getFollowings');
     Route::get('followers', 'UserController@getFollowers');
+    Route::get('notifications', 'UserController@getNotifications');
 
     Route::post('posts', 'PostsController@store');
     Route::put('posts/{id}', 'PostsController@update');

@@ -12,6 +12,7 @@ use App\Repositories\Api\Post\PostRepositoryInterface;
 use App\Repositories\Api\User\UserRepositoryInterface;
 use App\Repositories\Api\Comment\CommentRepositoryInterface;
 use App\Repositories\Api\CompanyDetails\CompanyDetailsRepositoryInterface;
+use App\Repositories\Api\Notification\NotificationRepositoryInterface;
 
 class PostsController extends ApiController
 {
@@ -26,6 +27,7 @@ class PostsController extends ApiController
     private $likeRepository;
     private $commentRepository;
     private $abuseRepository;
+    private $notificationRepository;
 
     public function __construct(
         PostRepositoryInterface $postRepository,
@@ -33,7 +35,8 @@ class PostsController extends ApiController
         CompanyDetailsRepositoryInterface $companyDetailsRepository,
         LikeRepositoryInterface $likeRepository,
         CommentRepositoryInterface $commentRepository,
-        AbuseRepositoryInterface $abuseRepository
+        AbuseRepositoryInterface $abuseRepository,
+        NotificationRepositoryInterface $notificationRepository
     ) {
         parent::__construct();
         $this->postRepository = $postRepository;
@@ -42,6 +45,7 @@ class PostsController extends ApiController
         $this->likeRepository = $likeRepository;
         $this->commentRepository = $commentRepository;
         $this->abuseRepository = $abuseRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     public function index(Request $request)
@@ -166,7 +170,9 @@ class PostsController extends ApiController
                 $message = _lang('app.not_found');
                 return _api_json('', ['message' => $message], 404);
             }
-            $this->likeRepository->createOrDelete($post);
+            if ($this->likeRepository->createOrDelete($post)) {
+                $this->notificationRepository->send($post->user_id, $this->notificationRepository->types['like'], $post->id);
+            }
             $message = _lang('app.updated_successfully');
             return _api_json('', ['message' => $message]);
         } catch (\Exception $ex) {

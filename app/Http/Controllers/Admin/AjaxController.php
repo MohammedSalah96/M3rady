@@ -4,16 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BackendController;
-use App\Repositories\Backend\Product\ProductRepositoryInterface;
+use App\Repositories\Backend\Location\LocationRepositoryInterface;
 
 class AjaxController extends BackendController {
 
-    private $productRepository;
+    private $locationRepository;
 
-    public function __construct(ProductRepositoryInterface $productRepository)
+    public function __construct(LocationRepositoryInterface $locationRepository)
     {
         parent::__construct();
-        $this->productRepository = $productRepository;
+        $this->locationRepository = $locationRepository;
     }
 
     public function change_lang(Request $request) {
@@ -63,12 +63,12 @@ class AjaxController extends BackendController {
         }
     }
 
-    public function categoryProducts(Request $request, $category)
+    public function getLocations(Request $request, $country)
     {
         try {
-            $products = $this->productRepository->allByCategory([$category], $request);
-            $products = $products->count() > 0 ? $products->toArray() : [];
-           return _json('success',['products' => $products]);
+            $cities = $this->locationRepository->getByParent($country);
+            $cities = $cities->count() > 0 ? $cities->toArray() : [];
+           return _json('success', ['cities' => $cities]);
         } catch (\Exception $ex) {
             return _json('error', _lang('app.something_went_wrong'), 400);
         }

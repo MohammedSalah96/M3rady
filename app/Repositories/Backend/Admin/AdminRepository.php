@@ -35,7 +35,7 @@ class AdminRepository extends BaseRepository implements BaseRepositoryInterface,
       $admin->password = bcrypt($request->input('password'));
       $admin->active = $request->input('active');
       $admin->group_id = $request->input('group_id');
-      $admin->created_by = $this->user->id;
+      $admin->created_by = $this->authUser->id;
       $admin->image = 'default.png';
       $admin->save();
 
@@ -65,7 +65,7 @@ class AdminRepository extends BaseRepository implements BaseRepositoryInterface,
    public function dataTable(Request $request)
    {
       return $this->admin->join('groups', 'groups.id', '=', 'admins.group_id')
-         ->where('admins.created_by', $this->user->id)
+         ->where('admins.created_by', $this->authUser->id)
          ->select('admins.*', 'groups.name as group');
    }
 
@@ -97,27 +97,27 @@ class AdminRepository extends BaseRepository implements BaseRepositoryInterface,
 
    public function updateProfile(Request $request)
    {
-      $this->user->name = $request->input('name');
-      $this->user->email = $request->input('email');
-      $this->user->phone = $request->input('phone');
+      $this->authUser->name = $request->input('name');
+      $this->authUser->email = $request->input('email');
+      $this->authUser->phone = $request->input('phone');
       if ($request->file('image')) {
-         if ($this->user->image != 'default.png') {
-            $this->admin->deleteUploaded('admins', $this->user->image);
+         if ($this->authUser->image != 'default.png') {
+            $this->admin->deleteUploaded('admins', $this->authUser->image);
          }
-         $this->user->image = $this->admin->upload($request->file('image'), 'admins');
+         $this->authUser->image = $this->admin->upload($request->file('image'), 'admins');
       }
       if ($request->input('profile_avatar_remove')) {
-         if ($this->user->image != 'default.png') {
-            $this->admin->deleteUploaded('admins', $this->user->image);
+         if ($this->authUser->image != 'default.png') {
+            $this->admin->deleteUploaded('admins', $this->authUser->image);
          }
-         $this->user->image = 'default.png';
+         $this->authUser->image = 'default.png';
       }
-      $this->user->save();
+      $this->authUser->save();
    }
 
    public function checkCurrentPassword(Request $request)
    {
-      if (password_verify($request->input('current_password'), $this->user->password)) {
+      if (password_verify($request->input('current_password'), $this->authUser->password)) {
          return true;
       }
       return false;
@@ -125,8 +125,8 @@ class AdminRepository extends BaseRepository implements BaseRepositoryInterface,
 
    public function updatePassword(Request $request)
    {
-      $this->user->password = bcrypt($request->input('new_password'));
-      $this->user->save();
+      $this->authUser->password = bcrypt($request->input('new_password'));
+      $this->authUser->save();
    }
 
 }

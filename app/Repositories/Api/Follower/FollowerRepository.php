@@ -23,11 +23,13 @@ class FollowerRepository extends BaseRepository implements BaseRepositoryInterfa
         $follower = $this->follower->where('following_id',$id)->where('follower_id',$this->authUser()->id)->first();
         if ($follower) {
             $follower->delete();
+            return false;
         }else{
             $follower = new $this->follower;
             $follower->follower_id = $this->authUser()->id;
             $follower->following_id = $id;
             $follower->save();
+            return true;
         }
     }
 

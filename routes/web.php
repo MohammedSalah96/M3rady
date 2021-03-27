@@ -19,6 +19,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
     Route::get('/error', 'AdminController@error')->name('admin.error');
     Route::get('change_lang', 'AjaxController@change_lang')->name('ajax.change_lang');
     Route::post('delete_image', 'AjaxController@deleteImage');
+    Route::get('get_locations/{id}', 'AjaxController@getLocations');
     
     Route::get('profile', 'ProfileController@index')->name('admin.profile');
     Route::patch('profile', 'ProfileController@update');
@@ -53,6 +54,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
 
     Route::resource('welcome_screens', 'WelcomeScreensController');
     Route::post('welcome_screens/data', 'WelcomeScreensController@data');
+
+    Route::resource('clients', 'ClientsController');
+    Route::post('clients/data', 'ClientsController@data');
     
 
     

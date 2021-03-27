@@ -11,6 +11,7 @@ use App\Repositories\Api\User\UserRepositoryInterface;
 use App\Repositories\Api\Device\DeviceRepositoryInterface;
 use App\Repositories\Api\Follower\FollowerRepositoryInterface;
 use App\Repositories\Api\CompanyDetails\CompanyDetailsRepositoryInterface;
+use App\Repositories\Api\Notification\NotificationRepositoryInterface;
 
 class UserController extends ApiController {
 
@@ -18,18 +19,22 @@ class UserController extends ApiController {
     private $companyDetailsRepository;
     private $followerRepository;
     private $deviceRepository;
+    private $notificationRepository;
     
 
     public function __construct(
         UserRepositoryInterface $userRepository,
         CompanyDetailsRepositoryInterface $companyDetailsRepository,
         FollowerRepositoryInterface $followerRepository,
-        DeviceRepositoryInterface $deviceRepository) {
+        DeviceRepositoryInterface $deviceRepository,
+        NotificationRepositoryInterface $notificationRepository
+        ) {
         parent::__construct();
         $this->userRepository = $userRepository;
         $this->companyDetailsRepository = $companyDetailsRepository;
         $this->followerRepository = $followerRepository;
         $this->deviceRepository = $deviceRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     public function getToken(Request $request)
@@ -121,11 +126,13 @@ class UserController extends ApiController {
     public function handleFollow($id)
     {
         try {
-            $this->followerRepository->createOrDelete($id);
+            if ($this->followerRepository->createOrDelete($id)) {
+                $this->notificationRepository->send($id, $this->notificationRepository->types['follow']);
+            }
             return _api_json('');
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
-            return _api_json(new \stdClass(), ['message' => $message], 400);
+            return _api_json('', ['message' => $message], 400);
         }
     }
 
@@ -149,6 +156,20 @@ class UserController extends ApiController {
                 return $follower->transform();
             });
             return _api_json($followers);
+        } catch (\Exception $ex) {
+            $message = _lang('app.something_went_wrong');
+            return _api_json([], ['message' => $message], 400);
+        }
+    }
+
+    public function getNotifications(Request $request)
+    {
+        try {
+            $this->notificationRepository->updateStatusForAuth();
+            $notifications = $this->notificationRepository->getForAuth()->transform(function ($notification, $key) {
+                return $notification->transform();
+            });
+            return _api_json($notifications);
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
             return _api_json([], ['message' => $message], 400);
