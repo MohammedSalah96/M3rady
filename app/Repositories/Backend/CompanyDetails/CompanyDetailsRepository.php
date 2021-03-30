@@ -31,7 +31,7 @@ class CompanyDetailsRepository extends BaseRepository implements CompanyDetailsR
         $companyDetails->company_id = $request->input('company_id');
         $companyDetails->name_ar = $request->input('name_ar');
         $companyDetails->name_en = $request->input('name_en');
-        $companyDetails->description = $request->input('company_description');
+        $companyDetails->description = $request->input('description');
         $companyDetails->main_category_id = $request->input('main_category');
         $companyDetails->sub_category_id = $request->input('sub_category');
         $companyDetails->lat = $request->input('lat');
@@ -50,9 +50,10 @@ class CompanyDetailsRepository extends BaseRepository implements CompanyDetailsR
     public function update(Request $request, $user)
     {
         $companyDetails = $this->companyDetails->where('user_id', $user->id)->first();
+        $companyDetails->company_id = $request->input('company_id');
         $companyDetails->name_ar = $request->input('name_ar');
         $companyDetails->name_en = $request->input('name_en');
-        $companyDetails->description = $request->input('company_description');
+        $companyDetails->description = $request->input('description');
         $companyDetails->main_category_id = $request->input('main_category');
         $companyDetails->sub_category_id = $request->input('sub_category');
         $companyDetails->lat = $request->input('lat');

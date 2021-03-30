@@ -36,7 +36,7 @@ return [
     ],
 
     'google' => [
-        'client_id' => '547567848746-2qdt39trustsadvqf1ijl5vb5p467goc.apps.googleusercontent.com',         
+        'client_id' => '721542461562-2ddarrr1717tijn30lpira43r31vde11.apps.googleusercontent.com',         
         'client_secret' => '', 
         'redirect' => '',
     ],

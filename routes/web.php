@@ -20,6 +20,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
     Route::get('change_lang', 'AjaxController@change_lang')->name('ajax.change_lang');
     Route::post('delete_image', 'AjaxController@deleteImage');
     Route::get('get_locations/{id}', 'AjaxController@getLocations');
+    Route::get('get_categories/{id}', 'AjaxController@getCategories');
+    
     
     Route::get('profile', 'ProfileController@index')->name('admin.profile');
     Route::patch('profile', 'ProfileController@update');
@@ -57,8 +59,21 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
 
     Route::resource('clients', 'ClientsController');
     Route::post('clients/data', 'ClientsController@data');
-    
 
+    Route::resource('companies', 'CompaniesController');
+    Route::post('companies/data', 'CompaniesController@data');
+
+    Route::resource('posts', 'PostsController');
+    Route::post('posts/data', 'PostsController@data');
+
+    Route::resource('likes', 'LikesController');
+    Route::post('likes/data', 'LikesController@data');
+
+    Route::resource('abuses', 'AbusesController');
+    Route::post('abuses/data', 'AbusesController@data');
+
+    Route::resource('comments', 'CommentsController');
+    Route::post('comments/data', 'CommentsController@data');
     
 
     Route::group(['namespace' => 'Auth'], function () {

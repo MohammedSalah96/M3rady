@@ -31,6 +31,13 @@ class CategoryRepository extends BaseRepository implements BaseRepositoryInterfa
       return $categories = $categories->select('categories.*', 'category_translations.name')->get();
    }
 
+   public function getByParent($parentId = 0)
+   {
+      return $this->all([
+         ['parent_id', '=', $parentId]
+      ]);
+   }
+
    public function tree($id)
    {
       $tree = null;

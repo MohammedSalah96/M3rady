@@ -1,26 +1,26 @@
 @extends('layouts.backend')
 
-@section('pageTitle', _lang('app.clients'))
+@section('pageTitle', _lang('app.companies'))
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
     <a href="{{url('admin')}}" class="text-muted">{{_lang('app.dashboard')}}</a>
 </li>
 <li class="breadcrumb-item">
-    <a href="#">{{_lang('app.clients')}}</a>
+    <a href="#">{{_lang('app.companies')}}</a>
 </li>
 @endsection
 
 @section('js')
-<script src="{{url('public/backend/scripts/clients.js')}}" type="text/javascript"></script>
+<script src="{{url('public/backend/scripts/companies.js')}}" type="text/javascript"></script>
 @endsection
 
 @section('content')
 <div class="card card-custom gutter-b">
     <div class="card-header">
-        <h3 class="card-title">{{_lang('app.create') }}/{{_lang('app.edit') }} {{_lang('app.clients') }} </h3>
+        <h3 class="card-title">{{_lang('app.create') }}/{{_lang('app.edit') }} {{_lang('app.companies') }} </h3>
     </div>
-    <form id="addEditClientsForm" enctype="multipart/form-data">
+    <form id="addEditCompaniesForm" enctype="multipart/form-data">
         <div class="card-body">
             {{ csrf_field() }}
             <input type="hidden" name="id" id="id" value="0">
@@ -52,22 +52,17 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6 col-sm-12">
-                    <label for="name">{{_lang('app.name')}}<spanclass="text-danger">*</spanclass=></label>
-                    <input type="text" class="form-control form-control-solid" id="name" name="name">
-                    <span class="invalid-feedback"></span>
-                </div>
-                <div class="form-group col-md-6 col-sm-12">
-                    <label for="email">{{_lang('app.email')}}<spanclass="text-danger">*</spanclass=></label>
+                    <label for="email">{{_lang('app.email')}}<span class="text-danger">*</span></label>
                     <input type="email" class="form-control form-control-solid" id="email" name="email">
                     <span class="invalid-feedback"></span>
                 </div>
                 <div class="form-group col-md-6 col-sm-12">
-                    <label for="mobile">{{_lang('app.mobile')}}<spanclass="text-danger">*</spanclass=></label>
+                    <label for="mobile">{{_lang('app.mobile')}}<span class="text-danger">*</span></label>
                     <input type="text" class="form-control form-control-solid" id="mobile" name="mobile">
                     <span class="invalid-feedback"></span>
                 </div>
                 <div class="form-group col-md-6 col-sm-12">
-                    <label for="password">{{_lang('app.password')}}<spanclass="text-danger">*</spanclass=></label>
+                    <label for="password">{{_lang('app.password')}}<span class="text-danger">*</span></label>
                     <input type="password" class="form-control form-control-solid" id="password" name="password">
                     <span class="invalid-feedback"></span>
                 </div>
@@ -107,6 +102,90 @@
                     <span class="invalid-feedback"></span>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="company_id">{{_lang('app.company_id')}}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-solid" id="company_id" name="company_id">
+                    <span class="invalid-feedback"></span>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="description">{{_lang('app.description')}}<span class="text-danger">*</span></label>
+                    <textarea rows="5" class="form-control form-control-solid" id="description"
+                        name="description"></textarea>
+                    <span class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="name_ar">{{_lang('app.name_ar')}}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-solid" id="name_ar" name="name_ar">
+                    <span class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="name_en">{{_lang('app.name_en')}}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-solid" id="name_en" name="name_en">
+                    <span class="invalid-feedback"></span>
+                </div>
+
+                
+
+               <div class="form-group col-md-4 col-sm-12">
+                    <label>
+                        {{ _lang('app.main_category') }}<span class="text-danger">*</span>
+                    </label>
+                    <select class="form-control form-control-solid" id="main_category" name="main_category">
+                        <option value="">{{ _lang('app.choose_category') }}</option>
+                        @foreach ($categories as $category)
+                            <option value="{{$category->id}}">{{ $category->name }}</option>
+                        @endforeach
+                       
+                    </select>
+                    <span class="invalid-feedback"></span>
+                </div>
+                <div class="form-group col-md-4 col-sm-12">
+                    <label>
+                        {{ _lang('app.sub_category') }}<span class="text-danger">*</span>
+                    </label>
+                    <select class="form-control form-control-solid" id="sub_category" name="sub_category">
+                        <option value="">{{ _lang('app.choose_category') }}</option>
+                    </select>
+                    <span class="invalid-feedback"></span>
+                </div>
+               
+                <div class="form-group col-md-2 col-sm-12">
+                    <label for="lat">{{_lang('app.lat')}}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-solid" id="lat" name="lat">
+                    <span class="invalid-feedback"></span>
+                </div>
+                
+                <div class="form-group col-md-2 col-sm-12">
+                    <label for="lng">{{_lang('app.lng')}}<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-solid" id="lng" name="lng">
+                    <span class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="facebook">{{_lang('app.facebook')}}</label>
+                    <input type="text" class="form-control form-control-solid" id="facebook" name="facebook">
+                    <span class="invalid-feedback"></span>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="twitter">{{_lang('app.twitter')}}</label>
+                    <input type="text" class="form-control form-control-solid" id="twitter" name="twitter">
+                    <span class="invalid-feedback"></span>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="whatsapp">{{_lang('app.whatsapp')}}</label>
+                    <input type="text" class="form-control form-control-solid" id="whatsapp" name="whatsapp">
+                    <span class="invalid-feedback"></span>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="website">{{_lang('app.website')}}</label>
+                    <input type="text" class="form-control form-control-solid" id="website" name="website">
+                    <span class="invalid-feedback"></span>
+                </div>
+            </div>
             
            
         </div>
@@ -138,7 +217,7 @@
             <span class="card-icon">
                 <i class="flaticon-cogwheel text-primary"></i>
             </span>
-            <h3 class="card-label">{{_lang('app.manage_clients')}}</h3>
+            <h3 class="card-label">{{_lang('app.manage_companies')}}</h3>
         </div>
     </div>
 
@@ -147,11 +226,11 @@
         <table class="table table-bordered table-head-custom table-checkable" id="kt_datatable">
             <thead>
                 <tr>
-                    <th>{{ _lang('app.name')}}</th>
+                    <th>{{ _lang('app.company')}}</th>
                     <th>{{ _lang('app.email')}}</th>
                     <th>{{ _lang('app.mobile')}}</th>
                     <th>{{ _lang('app.country')}}</th>
-                    <th>{{ _lang('app.city')}}</th>
+                    <th>{{ _lang('app.category')}}</th>
                     <th>{{ _lang('app.status')}}</th>
                     <th>{{ _lang('app.options')}}</th>
                 </tr>
@@ -168,7 +247,8 @@
        type : "{{$type}}"
     };
     var newLang = {
-        choose_city : "{{_lang('app.choose_city')}}"
+        choose_city : "{{_lang('app.choose_city')}}",
+        choose_category : "{{_lang('app.choose_category')}}",
     };
 </script>
 @endsection

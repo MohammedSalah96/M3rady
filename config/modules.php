@@ -20,6 +20,22 @@ return [
             'actions' => 'open,add,edit,delete'
         ],
         [
+            'name' =>    'posts',
+            'actions' => 'open,delete'
+        ],
+        [
+            'name' =>    'likes',
+            'actions' => 'open,delete'
+        ],
+        [
+            'name' =>    'comments',
+            'actions' => 'open,delete'
+        ],
+        [
+            'name' =>    'abuses',
+            'actions' => 'open,delete'
+        ],
+        [
             'name' =>    'welcome_screens',
             'actions' => 'open,add,edit,delete'
         ],

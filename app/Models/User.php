@@ -63,6 +63,16 @@ class User extends Authenticatable implements UserInterface {
         return $this->hasMany(Follower::class, 'follower_id');
     }
 
+    public function rates()
+    {
+        return $this->hasMany(Rate::class, 'company_id');
+    }
+
+    public function rated()
+    {
+        return $this->hasMany(Rate::class, 'user_id');
+    }
+
 
     public function transform()
     {
@@ -149,9 +159,35 @@ class User extends Authenticatable implements UserInterface {
     
     protected static function boot() {
         parent::boot();
-        static::deleting(function ($user) {
+        static::deleting(function (User $user) {
             foreach ($user->devices as $device) {
                 $device->delete();
+            }
+            foreach ($user->subscriptions as $subscription) {
+                $subscription->delete();
+            }
+            foreach ($user->posts as $post) {
+                $post->delete();
+            }
+            foreach ($user->likes as $like) {
+                $like->delete();
+            }
+            foreach ($user->followers as $follower) {
+                $follower->delete();
+            }
+            foreach ($user->followings as $following) {
+                $following->delete();
+            }
+            foreach ($user->rates as $rate) {
+                $rate->delete();
+            }
+            foreach ($user->rated as $rate) {
+                $rate->delete();
+            }
+            
+
+            if ($user->type = $user->types['company']) {
+                $user->companyDetails->delete();
             }
         });
         

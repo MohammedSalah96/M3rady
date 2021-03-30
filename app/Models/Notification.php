@@ -52,10 +52,13 @@ class Notification extends MyModel
     {
         $transformer = new \stdClass();
         $name = $this->company_id ?: $this->name;
+        $transformer->type = $this->type;
         $transformer->body = $name . ' ' . $this->{array_search($this->type, $this->types) . "_messages"}[$this->getLangCode()];
         if ($this->entity_id) {
             $transformer->entity_id = $this->entity_id;
         }
+        $transformer->date = $this->created_at->format('Y-m-d h:i a');
+
         return $transformer;
     }
     

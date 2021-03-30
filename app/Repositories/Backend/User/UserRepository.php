@@ -19,6 +19,16 @@ class UserRepository extends BaseRepository implements BaseRepositoryInterface, 
       $this->types =  $this->user->types;
    }
 
+   public function getByType($type)
+   {
+      $columns = ['users.*'];
+      $users = $this->user->where('type',$type);
+      if ($type == $this->types['company']) {
+         $users->join('company_details','users.id','=', 'company_details.user_id');
+         $columns[] = 'company_details.company_id as name';
+      }
+      return $users = $users->select($columns)->get();
+   }
    public function find($id, array $conditions = [])
    {
       if (!empty($conditions)) {
@@ -86,9 +96,18 @@ class UserRepository extends BaseRepository implements BaseRepositoryInterface, 
                               $query->on('users.city_id', '=', 'city_translations.location_id')
                                  ->where('city_translations.locale', $this->langCode);
                               })->where('type',$type);
-                              if ($type == 'company') {
-                                 $users->join('company_details', 'users.id','=', 'company_details.user_id');
-                                 $columns[]  = 'company_details.company_id';
+                              if ($type == $this->types['company']) {
+                                 $users->join('company_details', 'users.id','=', 'company_details.user_id')
+                                ->join('category_translations', function ($query) {
+                                 $query->on('company_details.main_category_id', '=', 'category_translations.category_id')
+                                    ->where('category_translations.locale', $this->langCode);
+                                 });
+                                 $columns  = array_merge($columns,[
+                                    'company_details.company_id',
+                                    'category_translations.name as category',
+                                    \DB::raw('(select count(*) from posts where user_id = users.id) as no_of_posts'),
+                                    \DB::raw('(select (sum(score)/count(*)) from rates where status = 1 and company_id = users.id) as rate')
+                                 ]);
                               }
       
       return $users = $users->select($columns);

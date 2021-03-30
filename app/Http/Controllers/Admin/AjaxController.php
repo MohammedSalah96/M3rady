@@ -4,16 +4,22 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BackendController;
+use App\Repositories\Backend\Category\CategoryRepositoryInterface;
 use App\Repositories\Backend\Location\LocationRepositoryInterface;
 
 class AjaxController extends BackendController {
 
     private $locationRepository;
+    private $categoryRepository;
 
-    public function __construct(LocationRepositoryInterface $locationRepository)
+    public function __construct(
+        LocationRepositoryInterface $locationRepository,
+        CategoryRepositoryInterface $categoryRepository
+        )
     {
         parent::__construct();
         $this->locationRepository = $locationRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function change_lang(Request $request) {
@@ -73,4 +79,18 @@ class AjaxController extends BackendController {
             return _json('error', _lang('app.something_went_wrong'), 400);
         }
     }
+
+    public function getCategories(Request $request, $category)
+    {
+        try {
+            $categories = $this->categoryRepository->getByParent($category);
+            $categories = $categories->count() > 0 ? $categories->toArray() : [];
+            return _json('success', ['categories' => $categories]);
+        } catch (\Exception $ex) {
+            return _json('error', _lang('app.something_went_wrong'), 400);
+        }
+    }
+
+
+    
 }

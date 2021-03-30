@@ -94,6 +94,28 @@ class RepositoriesServiceProvider extends ServiceProvider
             'App\Repositories\Backend\CompanyDetails\CompanyDetailsRepository'
         );
 
+        $this->app->bind(
+            'App\Repositories\Backend\Post\PostRepositoryInterface',
+            'App\Repositories\Backend\Post\PostRepository'
+        );
+
+        $this->app->bind(
+            'App\Repositories\Backend\Like\LikeRepositoryInterface',
+            'App\Repositories\Backend\Like\LikeRepository'
+        );
+
+        $this->app->bind(
+            'App\Repositories\Backend\Abuse\AbuseRepositoryInterface',
+            'App\Repositories\Backend\Abuse\AbuseRepository'
+        );
+
+        $this->app->bind(
+            'App\Repositories\Backend\Comment\CommentRepositoryInterface',
+            'App\Repositories\Backend\Comment\CommentRepository'
+        );
+
+        
+
         /** api */
         $this->app->bind(
             'App\Repositories\Api\User\UserRepositoryInterface',
