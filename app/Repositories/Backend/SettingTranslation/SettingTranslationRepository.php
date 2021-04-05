@@ -23,12 +23,12 @@ class SettingTranslationRepository extends BaseRepository implements SettingTran
    
    public function update(Request $request)
    {
-        $about_us = $request->input('about_us');
+        $policy = $request->input('policy');
         foreach ($this->languages as $language) {
             $this->settingTranslation->updateOrCreate(
                 ['locale' => $language],
                 [
-                    'about_us' => $about_us[$language]
+                    'policy' => $policy[$language]
                 ]
             );
         }

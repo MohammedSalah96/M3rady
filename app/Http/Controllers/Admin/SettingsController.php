@@ -41,7 +41,7 @@ class SettingsController extends BackendController {
     public function store(Request $request) {
         try {
             $columns_arr = array(
-                'about_us' => 'required'
+                'policy' => 'required'
             );
             $this->rules = array_merge($this->rules, $this->lang_rules($columns_arr));
             $validator = Validator::make($request->all(), $this->rules);
@@ -59,7 +59,6 @@ class SettingsController extends BackendController {
             DB::rollback();
             return _json('error', _lang('app.something_went_wrong'), 400);
         }
-        
     }
 
 

@@ -12,6 +12,7 @@ use App\Repositories\Api\PackageSubscription\PackageSubscriptionRepositoryInterf
 use App\Repositories\Api\Package\PackageRepositoryInterface;
 use App\Repositories\Api\Post\PostRepositoryInterface;
 use App\Repositories\Api\Banner\BannerRepositoryInterface;
+use App\Repositories\Api\SettingTranslation\SettingTranslationRepositoryInterface;
 use App\Repositories\Api\WelcomeScreen\WelcomeScreenRepositoryInterface;
 
 use Validator;
@@ -35,6 +36,8 @@ class BasicController extends ApiController {
     private $packageRepository;
     private $companyRepository;
     private $postRepository;
+    private $settingTranslationRepository;
+    
     
 
     public function __construct(
@@ -46,7 +49,8 @@ class BasicController extends ApiController {
         CompanyRepositoryInterface $companyRepository,
         PostRepositoryInterface $postRepository,
         BannerRepositoryInterface $bannerRepository,
-        WelcomeScreenRepositoryInterface $welcomeScreenRepository
+        WelcomeScreenRepositoryInterface $welcomeScreenRepository,
+        SettingTranslationRepositoryInterface $settingTranslationRepository
         
     )
     {
@@ -60,6 +64,7 @@ class BasicController extends ApiController {
         $this->postRepository = $postRepository;
         $this->bannerRepository = $bannerRepository;
         $this->welcomeScreenRepository = $welcomeScreenRepository;
+        $this->settingTranslationRepository = $settingTranslationRepository;
     }
 
     public function welcomeScreens(Request $request)
@@ -98,7 +103,11 @@ class BasicController extends ApiController {
         try {
             $locations = $this->locationRepository->getTree();
             $categories = $this->categoryRepository->getTree();
-            return _api_json(['locations' => $locations, 'categories' => $categories]);
+            $settings['info'] = $this->settingTranslationRepository->get();
+            return _api_json([
+                'locations' => $locations,
+                'categories' => $categories,
+                'settings' => $settings]);
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);

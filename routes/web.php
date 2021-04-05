@@ -74,6 +74,13 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
 
     Route::resource('comments', 'CommentsController');
     Route::post('comments/data', 'CommentsController@data');
+
+    Route::resource('rates', 'RatesController');
+    Route::post('rates/data', 'RatesController@data');
+
+    Route::resource('package_subscriptions', 'PackageSubscriptionsController');
+    Route::post('package_subscriptions/data', 'PackageSubscriptionsController@data');
+    
     
 
     Route::group(['namespace' => 'Auth'], function () {

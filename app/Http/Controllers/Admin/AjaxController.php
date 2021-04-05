@@ -23,12 +23,13 @@ class AjaxController extends BackendController {
     }
 
     public function change_lang(Request $request) {
-        $lang_code = $request->input('lang_code');
+        $langCode = $request->input('lang_code');
+        
         $long = 7 * 60 * 24;
         return response()->json([
                     'type' => 'success',
-                    'message' => $lang_code
-                ])->cookie('AdminLang', $lang_code, $long);
+                    'message' => $langCode
+                ])->cookie('AdminLang', $langCode, $long);
     }
 
     public function deleteImage(Request $request)

@@ -17,6 +17,11 @@ class Rate extends MyModel
         'is_mine' => 'boolean'
     ];
 
+    public $statuses = [
+        'pending' => 0,
+        'accepted' => 1
+    ];
+
     public function transform()
     {
         $transformer = new \stdClass();

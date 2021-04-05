@@ -66,12 +66,22 @@
                     </div>
     
                     <!-- Left and right controls -->
+                    @if ($lang_code == 'ar')
+                   <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                        <span class="carousel-control-next-icon"></span>
+                    </a>
+                    <a class="carousel-control-next" href="#demo" data-slide="next">
+                        <span class="carousel-control-prev-icon"></span>
+                    </a>
+                    @else
                     <a class="carousel-control-prev" href="#demo" data-slide="prev">
                         <span class="carousel-control-prev-icon"></span>
                     </a>
                     <a class="carousel-control-next" href="#demo" data-slide="next">
                         <span class="carousel-control-next-icon"></span>
                     </a>
+                    @endif
+                    
                 </div>
     
                 <!--end::Image-->

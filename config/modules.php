@@ -36,6 +36,10 @@ return [
             'actions' => 'open,delete'
         ],
         [
+            'name' =>    'rates',
+            'actions' => 'open,edit,delete'
+        ],
+        [
             'name' =>    'welcome_screens',
             'actions' => 'open,add,edit,delete'
         ],
@@ -50,6 +54,10 @@ return [
         [
             'name' =>    'packages',
             'actions' => 'open,add,edit,delete'
+        ],
+        [
+            'name' =>    'package_subscriptions',
+            'actions' => 'open'
         ],
         [
             'name' =>    'banners',

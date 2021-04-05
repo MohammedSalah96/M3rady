@@ -53,17 +53,17 @@
 
         <div class="card card-custom col-12 mb-3">
             <div class="card-header">
-                <h3 class="card-title">{{_lang('app.about_us') }}</h3>
+                <h3 class="card-title">{{_lang('app.policy') }}</h3>
             </div>
             <div class="card-body">
                 <div class="row">
                     @foreach ($languages as $key => $value)
                     <div class="form-group col-6">
-                        <label for="about_us">{{_lang('app.about_us') }} {{ _lang('app.'.$value) }}<span
+                        <label for="policy">{{_lang('app.policy') }} {{ _lang('app.'.$value) }}<span
                                 class="text-danger">*</span></label>
-                        <textarea class="form-control form-control-solid" id="about_us[{{ $key }}]"
-                            name="about_us[{{ $key }}]" cols="30" rows="10"
-                            placeholder="{{_lang('app.about_us') }} {{ _lang('app.'.$value) }}">{{isset($settings_translations[$key])?$settings_translations[$key]->about_us:''}}</textarea>
+                        <textarea class="form-control form-control-solid" id="policy[{{ $key }}]"
+                            name="policy[{{ $key }}]" cols="30" rows="10"
+                            placeholder="{{_lang('app.policy') }} {{ _lang('app.'.$value) }}">{{isset($settings_translations[$key])?$settings_translations[$key]->policy:''}}</textarea>
                         <span class="invalid-feedback"></span>
                     </div>
                     @endforeach

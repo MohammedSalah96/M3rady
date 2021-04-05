@@ -18,7 +18,7 @@ class CheckPermission {
 
         if (!\Permissions::check($page, $permission)) {
             if ($request->ajax()) {
-                App()->abort(403, 'Access denied');
+                App()->abort(403, _lang('app.access_denied'));
             } else {
                 return redirect()->route('admin.error');
             }

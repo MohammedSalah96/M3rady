@@ -102,7 +102,7 @@ class AbusesController extends BackendController
                 return $item->name ?: $item->company_id;
             })
             ->filterColumn('name', function ($query, $keyword) {
-                $query->whereRaw('users.name abuse ? or company_details.company_id abuse ?', ["%{$keyword}%","%{$keyword}%"]);
+                $query->whereRaw('users.name like ? or company_details.company_id like ?', ["%{$keyword}%","%{$keyword}%"]);
             })
             ->escapeColumns([])
             ->make(true);

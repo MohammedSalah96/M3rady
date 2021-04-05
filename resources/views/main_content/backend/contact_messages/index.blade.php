@@ -37,7 +37,6 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary font-weight-bold submit-form" style="display: none">{{_lang("app.send")}}</button>
                 <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">{{ _lang("app.close") }}</button>
             </div>
         </div>

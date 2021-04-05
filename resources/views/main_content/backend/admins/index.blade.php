@@ -49,7 +49,7 @@
                                     <button class="btn btn-success active" type="button"
                                         id="show-password">{{_lang('app.show')}}</button>
                                     <button class="btn btn-success active" type="button"
-                                        id="random-password">{{_lang('app.rondom')}}</button>
+                                        id="random-password">{{_lang('app.random')}}</button>
                                 </div>
                             </div>
                             <span class="invalid-feedback"></span>

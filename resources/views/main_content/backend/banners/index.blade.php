@@ -29,8 +29,8 @@
                     {{ csrf_field() }}
                     <input type="hidden" name="id" id="id" value="0">
                     <div class="form-group row">
-                        <label class="col-xl-3 col-lg-3 col-form-label">{{_lang('app.image')}}</label>
-                        <div class="col-lg-9 col-xl-9">
+                        <label class="col-xl-4 col-lg-4 col-form-label">{{_lang('app.image')}}</label>
+                        <div class="col-lg-8 col-xl-8">
                             <div class="image-input image-input-empty image-input-outline" id="kt_avatar"
                                 style="background-image: url({{url('public/backend/media/users/blank.png')}})">
                                 <div class="image-input-wrapper"></div>

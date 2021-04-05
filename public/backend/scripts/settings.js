@@ -52,8 +52,8 @@ var Settings = function () {
 
         var langs = JSON.parse(config.languages);
         for (var x = 0; x < langs.length; x++) {
-            var about_us = "textarea[name='about_us[" + langs[x] + "]']";
-            $(about_us).rules('add', {
+            var policy = "textarea[name='policy[" + langs[x] + "]']";
+            $(policy).rules('add', {
                 required: true
             });
         }

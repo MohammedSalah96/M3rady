@@ -114,6 +114,16 @@ class RepositoriesServiceProvider extends ServiceProvider
             'App\Repositories\Backend\Comment\CommentRepository'
         );
 
+        $this->app->bind(
+            'App\Repositories\Backend\Rate\RateRepositoryInterface',
+            'App\Repositories\Backend\Rate\RateRepository'
+        );
+
+        $this->app->bind(
+            'App\Repositories\Backend\PackageSubscription\PackageSubscriptionRepositoryInterface',
+            'App\Repositories\Backend\PackageSubscription\PackageSubscriptionRepository'
+        );
+
         
 
         /** api */
@@ -197,8 +207,12 @@ class RepositoriesServiceProvider extends ServiceProvider
             'App\Repositories\Api\Notification\NotificationRepositoryInterface',
             'App\Repositories\Api\Notification\NotificationRepository'
         );
-       
-  
+        $this->app->bind(
+            'App\Repositories\Api\SettingTranslation\SettingTranslationRepositoryInterface',
+            'App\Repositories\Api\SettingTranslation\SettingTranslationRepository'
+        );
+
+
         
     }
 

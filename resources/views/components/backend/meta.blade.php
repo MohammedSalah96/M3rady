@@ -36,6 +36,17 @@
 <link href="{{url('public/backend/css/themes/layout/aside/dark.css')}}" rel="stylesheet" type="text/css" />
 <!--end::Layout Themes-->
 @endif
+<style>
+    .aside-menu .menu-nav>.menu-item>.menu-heading .menu-text, .aside-menu .menu-nav>.menu-item>.menu-link .menu-text {
+        font-size: 1.3rem;
+    }
+    .card.card-custom, .form-group label, .table.table-head-custom thead th, .table.table-head-custom thead tr{
+        font-size: 1.3rem;
+    }
+    body{
+        font-size: 1.3rem;
+    }
+</style>
 <link rel="shortcut icon" href="{{url('public/backend/media/logos/favicon.ico')}}" />
 
 

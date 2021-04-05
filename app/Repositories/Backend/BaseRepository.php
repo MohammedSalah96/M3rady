@@ -14,9 +14,10 @@ class BaseRepository {
     {
         $this->authUser = Auth::guard('admin')->user();
         $this->languages = array_keys(\Config::get('app.locales'));
+        
         if (\Cookie::get('AdminLang') !== null) {
             try {
-                $this->langCode = \Crypt::decrypt(\Cookie::get('AdminLang'));
+                $this->langCode = explode("|", \Crypt::decrypt(\Cookie::get('AdminLang')))[1];
             } catch (\DecryptException $ex) {
                 $this->langCode = 'en';
             }

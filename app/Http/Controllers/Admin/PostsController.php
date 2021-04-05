@@ -49,7 +49,6 @@ class PostsController extends BackendController
             $this->data['post'] = $post;
             return $this->_view('posts.show');
         } catch (\Exception $ex) {
-            dd($ex);
             session()->flash('error_message', _lang('app.something_went_wrong'));
             return redirect()->route('posts.index');
         }
