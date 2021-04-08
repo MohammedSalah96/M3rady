@@ -7,5 +7,6 @@ use Illuminate\Http\Request;
 interface PackageSubscriptionRepositoryInterface{
    
     public function dataTable(Request $request);
+    public function statistics();
 
 }

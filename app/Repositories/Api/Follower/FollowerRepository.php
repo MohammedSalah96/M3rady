@@ -46,6 +46,7 @@ class FollowerRepository extends BaseRepository implements BaseRepositoryInterfa
         $columns = [
             'users.id',
             'users.image',
+            'users.type',
             'country_translations.name as country',
             'city_translations.name as city'
         ];

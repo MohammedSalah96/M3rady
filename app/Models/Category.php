@@ -33,6 +33,18 @@ class Category extends MyModel {
         return $transformer;
     }
 
+    public function transformListApi()
+    {
+        $transformer = new \stdClass();
+        $transformer->id = $this->id;
+        $transformer->name = $this->name;
+        $transformer->image = url("public/uploads/categories/$this->image");
+        $transformer->has_childs = $this->parent_id ? false : true;
+        return $transformer;
+    }
+
+    
+
     protected static function boot() {
         parent::boot();
 

@@ -13,4 +13,5 @@ interface PriceRequestRepositoryInterface
     public function find($id);
     public function findForAuth($id);
     public function findForCompany($id);
+    public function allowedToRequest();
 }

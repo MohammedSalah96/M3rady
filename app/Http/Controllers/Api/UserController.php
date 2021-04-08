@@ -65,30 +65,36 @@ class UserController extends ApiController {
     }
 
     protected function updateUser(Request $request) {
-
-        $rules = array();
-        $user = $this->userRepository->authUser();
-       
-        if ($request->input('email')) {
-            $rules['email'] = "required|email|unique:users,email,". $user->id;
-        }
-        
-        if ($request->input('mobile')) {
-            $rules['step'] = "required|in:1,2";
-            $rules['mobile'] =  "required|unique:users,mobile,". $user->id;
-        }
-        
-        if ($request->file('image')) {
-            $rules['image'] = 'mimes:jpg,png,jpeg';
-        }
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            $errors = $validator->errors()->toArray();
-            return _api_json(new \stdClass(), ['errors' => $errors], 400);
-        } 
-
         try {
-            DB::beginTransaction();
+            $rules = array();
+            $user = $this->userRepository->authUser();
+        
+            if ($request->input('email')) {
+                $rules['email'] = "required|email|unique:users,email,". $user->id;
+            }
+            
+            if ($request->input('mobile')) {
+                $rules['step'] = "required|in:1,2";
+                $rules['dial_code'] =  "required";
+                $rules['mobile'] =  "required";
+            }
+            
+            if ($request->file('image')) {
+                $rules['image'] = 'mimes:jpg,png,jpeg';
+            }
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                $errors = $validator->errors()->toArray();
+                return _api_json(new \stdClass(), ['errors' => $errors], 400);
+            }
+
+            if ($request->input('mobile')) {
+                if ($this->userRepository->checkMobileUniqueness($request,$user->id)) {
+                    $errors = ['mobile' => [_lang('app.the_mobile_has_already_been_taken')]];
+                    return _api_json(new \stdClass(), ['errors' => $errors], 400);
+                }
+            }
+
             if ($request->input('mobile') && $request->input('mobile') != $user->mobile) {
                 if ($request->input('step') == 1) {
                     $verification_code = strval(Random(4));
@@ -97,6 +103,7 @@ class UserController extends ApiController {
                 }
             }
 
+            DB::beginTransaction();
             $user = $this->userRepository->updateProfile($request);
             if ($user->type == $this->userRepository->types['company']) {
                $this->companyDetailsRepository->update($request, $user);

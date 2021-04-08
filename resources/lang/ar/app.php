@@ -157,6 +157,12 @@ return [
     'pending' => 'قيد المراجعة',
     'manage_welcome_screens' => 'إدارة الشاشات الترحيبية',
     'allowed_free_posts' => 'المنشورات المجانية المتاجة',
+    'main_categories' => 'الأقسام الرئيسية',
+    'sub_categories' => 'الأقسام الفرعية',
+    'countries' => 'البلاد',
+    'cities' => 'المدن',
+    'profit' => 'الربح'
+
 
     
 

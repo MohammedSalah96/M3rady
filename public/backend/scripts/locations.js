@@ -10,16 +10,7 @@ var LocationsGrid, parentId,image;
     };
    
     var handleRecords = function() {
-        LocationsGrid = $('#kt_datatable').DataTable({
-            "processing": true,
-            responsive: true,
-            "serverSide": true,
-            "ajax": {
-                "url": config.admin_url + "/locations/data",
-                "type": "POST",
-                data: { parent_id: parentId, _token: $('input[name="_token"]').val() },
-            },
-            "columns": [
+        var columns = [
                 {
                     "data": "name",
                     "name": "location_translations.name"
@@ -38,13 +29,32 @@ var LocationsGrid, parentId,image;
                     orderable: false,
                     searchable: false
                 }
-            ],
+        ];
+        var targets = [0,1,2,3];
+        if (parentId == 0) {
+            columns.splice(1, 0, 
+                {
+                    "data": "dial_code",
+                    "name": "locations.dial_code"
+                });
+                targets = [0,1,2,3,4];
+        }
+        LocationsGrid = $('#kt_datatable').DataTable({
+            "processing": true,
+            responsive: true,
+            "serverSide": true,
+            "ajax": {
+                "url": config.admin_url + "/locations/data",
+                "type": "POST",
+                data: { parent_id: parentId, _token: $('input[name="_token"]').val() },
+            },
+            "columns": columns,
             drawCallback: function (settings) {
                 $('[data-toggle="tooltip"]').tooltip();
             },
             'columnDefs': [
                 { 
-                    className: 'text-center', targets: [0,1,2,3] 
+                    className: 'text-center', targets: targets
                 }
             ],
             "oLanguage": { "sUrl": config.url + '/datatable-lang-' + config.lang_code + '.json' }
@@ -60,6 +70,9 @@ var LocationsGrid, parentId,image;
                 },
                 position: {
                     required: true
+                },
+                dial_code: {
+                    required: true
                 }
             },
             messages:{
@@ -67,6 +80,9 @@ var LocationsGrid, parentId,image;
                     required: lang.required_rule
                 },
                 position:{
+                    required: lang.required_rule
+                },
+                dial_code:{
                     required: lang.required_rule
                 },
             },

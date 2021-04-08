@@ -17,7 +17,8 @@ class RegisterController extends ApiController {
         'step' => 'required|in:1',
         'type' => 'required|in:1,2',
         'email' => 'required|email|unique:users,email',
-        'mobile' => 'required|unique:users,mobile',
+        'dial_code' => 'required',
+        'mobile' => 'required',
         'password' => 'required',
         'country' => 'required',
         'city' => 'required'
@@ -27,7 +28,8 @@ class RegisterController extends ApiController {
         'step' => 'required|in:1,2',
         'type' => 'required|in:1,2',
         'email' => 'required|email|unique:users,email',
-        'mobile' => 'required|unique:users,mobile',
+        'dial_code' => 'required',
+        'mobile' => 'required',
         'password' => 'required',
         'country' => 'required',
         'city' => 'required',
@@ -86,9 +88,14 @@ class RegisterController extends ApiController {
                 }
                 $rules = array_merge($this->rules, $rules);
             }
+            
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
                 $errors = $validator->errors()->toArray();
+                return _api_json(new \stdClass(), ['errors' => $errors], 400);
+            }
+            if ($this->userRepository->checkMobileUniqueness($request)) {
+                $errors = ['mobile' => [_lang('app.the_mobile_has_already_been_taken')]];
                 return _api_json(new \stdClass(), ['errors' => $errors], 400);
             }
             if ($request->input('step') == 1) {

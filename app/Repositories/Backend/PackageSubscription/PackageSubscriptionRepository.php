@@ -12,8 +12,13 @@ class PackageSubscriptionRepository extends BaseRepository implements  PackageSu
 
    public function __construct(PackageSubscription $packageSubscription)
    {
-       parent::__construct();
-       $this->packageSubscription =  $packageSubscription;
+      parent::__construct();
+      $this->packageSubscription =  $packageSubscription;
+   }
+
+   public function statistics()
+   {
+      return $this->packageSubscription->all()->sum('price');
    }
 
    public function dataTable(Request $request)

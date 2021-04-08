@@ -31,6 +31,11 @@ class CategoryRepository extends BaseRepository implements BaseRepositoryInterfa
       return $categories = $categories->select('categories.*', 'category_translations.name')->get();
    }
 
+   public function statistics($main = true)
+   {
+      return $this->category->where('parent_id',$main ? '=':'<>',0)->get()->count();
+   }
+
    public function getByParent($parentId = 0)
    {
       return $this->all([
@@ -70,7 +75,7 @@ class CategoryRepository extends BaseRepository implements BaseRepositoryInterfa
    {
       $category = new $this->category;
       $category->parent_id = $request->input('parent_id');
-      $category->image = $this->category->upload($request->file('image'), 'categories');
+      $category->image = $this->category->upload($request->file('image'), 'categories',false, false,false,true);
       $category->active = $request->input('active');
       $category->position = $request->input('position');
       if ($request->input('parent_id')) {
@@ -97,7 +102,7 @@ class CategoryRepository extends BaseRepository implements BaseRepositoryInterfa
       $category->position = $request->input('position');
       if ($request->file('image')) {
          $this->category->deleteUploaded('categories', $category->image);
-         $category->image = $this->category->upload($request->file('image'), 'categories');
+         $category->image = $this->category->upload($request->file('image'), 'categories', false, false, false, true);
       }
       $category->save(); 
       return $category;

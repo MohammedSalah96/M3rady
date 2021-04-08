@@ -11,13 +11,15 @@ class Follower extends MyModel
         'id' => 'integer',
         'country' => 'string',
         'city' => 'string',
-        'name' => 'string'
+        'name' => 'string',
+        'type' => 'integer'
     ];
 
     public function transform()
     {
        $transformer = new \stdClass();
         $transformer->id = $this->id;
+        $transformer->user_type = $this->type;
         $transformer->name = $this->name;
         $transformer->image = url("public/uploads/users/$this->image");
         $transformer->country = $this->country;

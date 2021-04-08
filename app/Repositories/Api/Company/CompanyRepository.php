@@ -75,6 +75,7 @@ class CompanyRepository extends BaseRepository implements BaseRepositoryInterfac
             'users.id',
             'users.image',
             'users.mobile',
+            'users.dial_code',
             'users.email',
             'package_subscriptions.id as is_featured',
             'country_translations.name as country',

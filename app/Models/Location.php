@@ -7,7 +7,8 @@ class Location extends MyModel {
     protected $table = "locations";
     protected $casts = [
         'id' => 'integer',
-        'name' => 'string'
+        'name' => 'string',
+        'dial_code' => 'integer'
     ];
   
     public function translations() {
@@ -26,6 +27,7 @@ class Location extends MyModel {
         $transformer->id = $this->id;
         $transformer->name = $this->name;
         if (!$this->parent_id) {
+            $transformer->dial_code = $this->dial_code;
             $transformer->childrens = $this->childrens ?: [];
         }
         return $transformer;

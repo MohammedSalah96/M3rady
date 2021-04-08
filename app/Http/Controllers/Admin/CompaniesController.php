@@ -249,7 +249,7 @@ class CompaniesController extends BackendController
                         </div>
                         <div>
                             <span class="text-dark text-center text-hover-primary">' . _lang('app.posts') . ' (' . $item->no_of_posts . ')</span> - 
-                            <span class="text-dark text-center text-hover-primary">' . _lang('app.rate') . ' (' . (($item->rate ?: 0)) . ')</span>
+                            <span class="text-dark text-center text-hover-primary">' . _lang('app.rate') . ' (' . (($item->rate ? ceil($item->rate) : 0)) . ')</span>
                         </div>
                         ';
             })

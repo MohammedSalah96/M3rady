@@ -42,7 +42,7 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
     {
         $post = new $this->post;
         foreach ($request->file('images') as $image) {
-           $images[] = $this->post->upload($image, 'posts');
+           $images[] = $this->post->upload($image, 'posts', false, false, false, true);
         }
         $post->images = json_encode($images);
         if ($request->input('description')) {
@@ -63,7 +63,7 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
     {
         $images = json_decode($post->images, true);
         foreach ($request->file('images') as $image) {
-            $images[] = $this->post->upload($image, 'posts');
+            $images[] = $this->post->upload($image, 'posts', false, false, false, true);
         }
         $post->images = json_encode($images);
         if ($request->input('description')) {
@@ -152,9 +152,15 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                 }
                             }
                             if ($request->input('feed')) {
-                                if ($user && !$request->input('category')) {
+                                if ($user && !$request->input('category') && !$request->input('search')) {
                                     $followings = $user->followings()->get()->pluck('following_id')->toArray();
-                                    $posts->whereIn('posts.user_id', $followings);
+                                    
+                                    if (empty($followings)) {
+                                        $posts->where('users.country_id',$user->country_id);
+                                        //->where('posts.id',\DB::raw('(select max(id) from posts where posts.user_id = users.id)'));
+                                    }else{
+                                        $posts->whereIn('posts.user_id', $followings);
+                                    }
                                 }
                             }
                             if ($id) {
@@ -180,6 +186,12 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                         }
                                         if ($request->input('search')) {
                                             $posts->whereRaw($this->post->handleKeywordWhere(['company_details.company_id'],$request->input('search')));
+                                            if (!$request->input('category')) {
+                                                $posts->where('posts.id', \DB::raw('(select max(id) from posts where posts.user_id = users.id)'))
+                                                    ->orderByRaw('ISNULL(is_featured)')
+                                                    ->orderBy('posts.created_at', 'desc');
+                                            }
+                                         
                                         }
                                         if ($request->input('order_by')) {
                                             switch ($request->input('order_by')) {

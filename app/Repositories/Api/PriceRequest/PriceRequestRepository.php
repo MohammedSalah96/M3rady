@@ -18,6 +18,15 @@ class PriceRequestRepository extends BaseRepository implements BaseRepositoryInt
         $this->priceRequest = $priceRequest;
     }
 
+    public function allowedToRequest(){
+        $user = $this->authUser();
+        $priceRequest = $this->priceRequest->where('user_id',$user->id)->orderBy('id','desc')->first();
+        if (date('Y-m-d H:i:s', strtotime($priceRequest->created_at . ' +1 day')) > date('Y-m-d H:i:s')) {
+            return false;
+        }
+        return true;
+    }
+
     public function create(Request $request)
     {
         $priceRequest = new $this->priceRequest;

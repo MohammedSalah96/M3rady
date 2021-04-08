@@ -23,7 +23,8 @@
 
   Route::get('get_token', 'UserController@getToken');
   Route::get('config', 'BasicController@getConfig');
-  Route::get('packages', 'BasicController@packages');
+  Route::get('packages', 'BasicController@getPackages');
+  Route::get('categories', 'BasicController@getCategories');
   Route::get('home', 'BasicController@home');
   Route::post('contact_message', 'BasicController@contactMessage');
   Route::get('welcome_screens', 'BasicController@welcomeScreens');

@@ -92,7 +92,7 @@ trait ModelTrait {
         return $diffLocations;
     }
 
-    public function upload($file, $path, $resize = false, $sizes_type = false, $base = false) {
+    public function upload($file, $path, $resize = false, $sizes_type = false, $base = false, $waterMark = false) {
         $image = '';
         $path = public_path() . "/uploads/$path";
         $extension = (!$base) ? '.' . strtolower($file->getClientOriginalExtension()) : '.png';
@@ -121,6 +121,10 @@ trait ModelTrait {
                         $image->resize($size['width'], $size['height']);
                     }
 
+                    /* insert watermark at bottom-right corner with 10px offset */
+                    if ($waterMark) {
+                        $image->insert(public_path('backend/media/logos/water-mark.jpeg'), 'bottom-right', 10, 10);
+                    }
 
                     $image = $image->save($path_with_filename, 100);
                     $image->reset();
@@ -129,6 +133,9 @@ trait ModelTrait {
                 }
                 return $names[0];
             }
+        }
+        if ($waterMark) {
+            $image->insert(public_path('backend/media/logos/water-mark.jpeg'), 'bottom-right', 10, 10);
         }
         $path_with_filename = $path . '/' . $filename;
         $image = $image->save($path_with_filename);

@@ -19,6 +19,11 @@ class UserRepository extends BaseRepository implements BaseRepositoryInterface, 
       $this->types =  $this->user->types;
    }
 
+   public function statistics($type)
+   {
+      return $this->user->where('type', $type)->get()->count();
+   }
+
    public function getByType($type)
    {
       $columns = ['users.*'];

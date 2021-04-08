@@ -28,7 +28,7 @@ class BannerRepository extends BaseRepository implements BaseRepositoryInterface
    public function create(Request $request)
    {
       $banner = new $this->banner;
-      $banner->image = $this->banner->upload($request->file('image'), 'banners');
+      $banner->image = $this->banner->upload($request->file('image'), 'banners', false, false, false, true);
       $banner->active = $request->input('active');
       $banner->position = $request->input('position');
 
@@ -42,7 +42,7 @@ class BannerRepository extends BaseRepository implements BaseRepositoryInterface
       $banner->position = $request->input('position');
       if ($request->file('image')) {
          $this->banner->deleteUploaded('banners', $banner->image);
-         $banner->image = $this->banner->upload($request->file('image'), 'banners');
+         $banner->image = $this->banner->upload($request->file('image'), 'banners', false, false, false, true);
       }
       $banner->save(); 
       return $banner;

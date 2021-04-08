@@ -18,6 +18,7 @@ class CreateLocationsTable extends Migration
             $table->boolean('active');
             $table->bigInteger('position');
             $table->integer('level');
+            $table->integer('dial_code');
             $table->bigInteger('parent_id');
             $table->string('parents_ids');
             $table->timestamps();

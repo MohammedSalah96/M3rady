@@ -114,6 +114,20 @@ class BasicController extends ApiController {
         }
     }
 
+    public function getCategories(Request $request)
+    {
+        try {
+            $categories = $this->categoryRepository->list($request);
+            $categories = $categories->transform(function($category, $key){
+                return $category->transformListApi();
+            });
+            return _api_json($categories);
+        } catch (\Exception $ex) {
+            $message = _lang('app.something_went_wrong');
+            return _api_json([], ['message' => $message], 400);
+        }
+    }
+
     public function contactMessage(Request $request)
     {
         try {
@@ -131,7 +145,7 @@ class BasicController extends ApiController {
         }
     }
 
-    public function packages(Request $request)
+    public function getPackages(Request $request)
     {
         try {
             $packages = $this->packageRepository->list()->transform(function ($package, $key) {

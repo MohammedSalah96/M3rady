@@ -31,6 +31,11 @@ class LocationRepository extends BaseRepository implements BaseRepositoryInterfa
       return $locations = $locations->select('locations.*', 'location_translations.name')->get();
    }
 
+   public function statistics($country = true)
+   {
+      return $this->location->where('parent_id', $country ? '=' : '<>' ,0)->get()->count();
+   }
+
    public function getByParent($parentId = 0){
       return $this->all([
          ['parent_id', '=', $parentId]
@@ -83,6 +88,7 @@ class LocationRepository extends BaseRepository implements BaseRepositoryInterfa
          }
       } else {
          $location->level = 1;
+         $location->dial_code = $request->input('dial_code');
       }
       $location->save();
       return $location;
@@ -92,6 +98,9 @@ class LocationRepository extends BaseRepository implements BaseRepositoryInterfa
    {
       $location->active = $request->input('active');
       $location->position = $request->input('position');
+      if (!$location->parent_id) {
+         $location->dial_code = $request->input('dial_code');
+      }
       $location->save(); 
       return $location;
    }

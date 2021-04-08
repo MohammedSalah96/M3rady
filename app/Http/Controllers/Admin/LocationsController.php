@@ -67,6 +67,9 @@ class LocationsController extends BackendController
             );
             $lang_rules = $this->lang_rules($columns_arr);
             $this->rules = array_merge($this->rules, $lang_rules);
+            if (!$request->input('parent_id')) {
+                $this->rules['dial_code'] = 'required';
+            }
             $validator = Validator::make($request->all(), $this->rules);
             if ($validator->fails()) {
                 $errors = $validator->errors()->toArray();
@@ -123,6 +126,10 @@ class LocationsController extends BackendController
             );
             $lang_rules = $this->lang_rules($columns_arr);
             $this->rules = array_merge($this->rules, $lang_rules);
+
+            if (!$request->input('parent_id')) {
+                $this->rules['dial_code'] = 'required';
+            }
             $validator = Validator::make($request->all(), $this->rules);
             if ($validator->fails()) {
                 $errors = $validator->errors()->toArray();

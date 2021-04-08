@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 interface UserRepositoryInterface{
 
     public function register(Request $reuqest);
+    public function checkMobileUniqueness(Request $reuqest, $id = null);
     public function checkAuth(array $credentials);
     public function issueToken($user);
     public function canPost();

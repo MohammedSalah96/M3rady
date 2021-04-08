@@ -43,6 +43,17 @@
                         <span class="invalid-feedback"></span>
                     </div>
                     @endforeach
+                    @if (!$parentId)
+                        <div class="form-group">
+                            <label>
+                                {{ _lang('app.dial_code') }}<span class="text-danger">*</span>
+                            </label>
+                            <input type="number" class="form-control form-control-solid" id="dial_code" name="dial_code"
+                                placeholder="{{_lang('app.dial_code')}}">
+                            <span class="invalid-feedback"></span>
+                        </div>
+                    @endif
+                   
                     <div class="form-group">
                         <label>
                             {{ _lang('app.position') }}<span class="text-danger">*</span>
@@ -103,6 +114,9 @@
                     <thead>
                         <tr>
                             <th>{{ _lang('app.name')}}</th>
+                            @if (!$parentId)
+                                <th>{{ _lang('app.dial_code')}}</th>
+                            @endif
                             <th>{{ _lang('app.status')}}</th>
                             <th>{{ _lang('app.position')}}</th>
                             <th>{{ _lang('app.options')}}</th>

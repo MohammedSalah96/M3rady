@@ -25,6 +25,7 @@ class UserRepository extends BaseRepository implements BaseRepositoryInterface, 
         $user = new $this->user;
         $user->name = $request->input('name') ?: "";
         $user->email = $request->input('email');
+        $user->dial_code = $request->input('dial_code');
         $user->mobile = $request->input('mobile');
         $user->password = bcrypt($request->input('password'));
         $user->country_id = $request->input('country');
@@ -36,6 +37,14 @@ class UserRepository extends BaseRepository implements BaseRepositoryInterface, 
         return $user;
     }
 
+    public function checkMobileUniqueness(Request $reuqest, $id = null){
+        $user = $this->user->where('dial_code',$reuqest->input('dial_code'))
+                          ->where('mobile', $reuqest->input('mobile'));
+                          if ($id) {
+                            $user->where('id','<>',$id);
+                          }
+        return $user = $user->first();
+    }
 
     public function issueToken($user)
     {
@@ -74,14 +83,19 @@ class UserRepository extends BaseRepository implements BaseRepositoryInterface, 
 
     public function checkAuth($credentials)
     {
+        $isMobile = false;
         if (is_numeric($credentials['username'])) {
             $field = 'mobile';
+            $isMobile = true;
         } elseif (filter_var($credentials['username'], FILTER_VALIDATE_EMAIL)) {
             $field = 'email';
         }
         $user = $this->user->where('active', true)
-            ->where($field, $credentials['username'])
-            ->first();
+            ->where($field, $credentials['username']);
+            if ($isMobile) {
+                $user->where('dial_code', $credentials['dial_code']);
+            }
+        $user = $user->first();
         if ($user) {
             if (password_verify($credentials['password'], $user->password)) {
                 return $user;
@@ -111,6 +125,9 @@ class UserRepository extends BaseRepository implements BaseRepositoryInterface, 
         }
         if ($request->input('email')) {
             $user->email = $request->input('email');
+        }
+        if ($request->input('dial_code')) {
+            $user->dial_code = $request->input('dial_code');
         }
         if ($request->input('mobile')) {
             $user->mobile = $request->input('mobile');

@@ -15,6 +15,7 @@ class User extends Authenticatable implements UserInterface {
         'name' => 'string',
         'email' => 'string',
         'mobile' => 'string',
+        'dial_code' => 'integer',
         'country_id' => 'integer',
         'city_id' => 'integer',
         'image' => 'string',
@@ -81,6 +82,7 @@ class User extends Authenticatable implements UserInterface {
             $transformer->name = $this->name;
         }
         $transformer->email = $this->email;
+        $transformer->dial_code = $this->dial_code;
         $transformer->mobile = $this->mobile ?: "";
         $transformer->country_id = $this->country_id;
         $transformer->city_id = $this->city_id;
@@ -143,13 +145,15 @@ class User extends Authenticatable implements UserInterface {
         $transformer->name_ar = $this->name_ar;
         $transformer->name_en = $this->name_en;
         $transformer->description = $this->description;
-        $transformer->mobile = $this->mobile;
+        $transformer->mobile = $this->dial_code.''.$this->mobile;
         $transformer->whatsapp = $this->whatsapp;
         $transformer->facebook = $this->facebook;
         $transformer->twitter = $this->twitter;
         $transformer->website = $this->website;
         $transformer->lat = $this->lat;
         $transformer->lng = $this->lng;
+        $transformer->posts_count = $this->posts()->count();
+        $transformer->followers_count = $this->followers()->count();
 
         return $transformer;
     }

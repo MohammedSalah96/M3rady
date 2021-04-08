@@ -47,12 +47,19 @@ class LoginController extends ApiController {
     public function login(Request $request) {
 
         try {
+            if (is_numeric($request->input('username'))) {
+                $this->rules['dial_code'] = 'required';
+            }
             $validator = Validator::make($request->all(), $this->rules);
             if ($validator->fails()) {
                 $errors = $validator->errors()->toArray();
                 return _api_json(new \stdClass(), ['errors' => $errors], 400);
             }
-            $user = $this->userRepository->checkAuth($request->only(['username','password']));
+            $credentials = $request->only(['username','password']);
+            if ($request->input('dial_code')) {
+                $credentials['dial_code'] = $request->input('dial_code');
+            }
+            $user = $this->userRepository->checkAuth($credentials);
             if ($user) {
                DB::beginTransaction();
                $tokenDetails = $this->userRepository->issueToken($user);

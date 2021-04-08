@@ -17,6 +17,10 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
        $this->post =  $post;
    }
 
+   public function statistics()
+   {
+      return $this->post->all()->count();
+   }
 
    public function find($id, array $conditions = [])
    {
