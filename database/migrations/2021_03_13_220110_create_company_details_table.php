@@ -27,10 +27,6 @@ class CreateCompanyDetailsTable extends Migration
             $table->string('twitter', 500);
             $table->string('website', 500);
             $table->boolean('allowed_to_rate')->default(true);
-            $table->bigInteger('main_category_id')->unsigned();
-            $table->foreign('main_category_id')->references('id')->on('categories');
-            $table->bigInteger('sub_category_id')->unsigned()->nullable();
-            $table->foreign('sub_category_id')->references('id')->on('categories');
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

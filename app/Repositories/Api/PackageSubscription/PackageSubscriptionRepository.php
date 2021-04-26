@@ -28,4 +28,15 @@ class PackageSubscriptionRepository extends BaseRepository implements BaseReposi
         $packageSubscription->end_date = date('Y-m-d', strtotime("+$package->duration months"));
         $packageSubscription->save();
     }
+
+    public function authSubscription(){
+        return $this->packageSubscription->join('package_translations',function($query){
+            $query->on('package_subscriptions.package_id','=', 'package_translations.package_id')
+            ->where('package_translations.locale',$this->langCode);
+        })
+        ->where('package_subscriptions.user_id',$this->authUser()->id)
+        ->orderBy('package_subscriptions.created_at','desc')
+        ->select('package_subscriptions.*', 'package_translations.name as package')
+        ->first();
+    }
 }

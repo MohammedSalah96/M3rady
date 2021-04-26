@@ -88,6 +88,7 @@
                     </th>
                     <th>{{ _lang('app.name')}}</th>
                     <th>{{ _lang('app.mobile')}}</th>
+                    <th>{{ _lang('app.type')}}</th>
                     <th>{{ _lang('app.message')}}</th>
                     <th>{{ _lang('app.created_at')}}</th>
                     <th>{{ _lang('app.options')}}</th>

@@ -56,6 +56,10 @@ var Settings = function () {
             $(policy).rules('add', {
                 required: true
             });
+            var aboutUs = "textarea[name='about_us[" + langs[x] + "]']";
+            $(aboutUs).rules('add', {
+                required: true
+            });
         }
 
         $('#editSettingsForm .submit-form').click(function () {
@@ -102,7 +106,7 @@ var Settings = function () {
                         if (typeof data.errors === 'object') {
                             for (i in data.errors) {
                                 var message = data.errors[i];
-                                if (i.startsWith('about_us')) {
+                                if (i.startsWith('about_us') || i.startsWith('policy')) {
                                     var key_arr = i.split('.');
                                     var key_text = key_arr[0] + '[' + key_arr[1] + ']';
                                     i = key_text;

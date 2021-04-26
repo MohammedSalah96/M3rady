@@ -22,4 +22,5 @@ class MyModel extends Model {
         return $diffLocations;
     }
 
+
 }

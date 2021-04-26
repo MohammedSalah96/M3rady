@@ -16,6 +16,7 @@ class CreateSettingsTranslationsTable extends Migration
         Schema::create('settings_translations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('locale', 2);
+            $table->longText('policy');
             $table->longText('about_us');
             $table->timestamps();
         });

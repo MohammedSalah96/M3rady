@@ -41,7 +41,8 @@ class SettingsController extends BackendController {
     public function store(Request $request) {
         try {
             $columns_arr = array(
-                'policy' => 'required'
+                'policy' => 'required',
+                'about_us' => 'required',
             );
             $this->rules = array_merge($this->rules, $this->lang_rules($columns_arr));
             $validator = Validator::make($request->all(), $this->rules);

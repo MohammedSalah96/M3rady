@@ -75,7 +75,7 @@ class CategoryRepository extends BaseRepository implements BaseRepositoryInterfa
    {
       $category = new $this->category;
       $category->parent_id = $request->input('parent_id');
-      $category->image = $this->category->upload($request->file('image'), 'categories',false, false,false,true);
+      $category->image = $this->category->upload($request->file('image'), 'categories');
       $category->active = $request->input('active');
       $category->position = $request->input('position');
       if ($request->input('parent_id')) {
@@ -102,7 +102,7 @@ class CategoryRepository extends BaseRepository implements BaseRepositoryInterfa
       $category->position = $request->input('position');
       if ($request->file('image')) {
          $this->category->deleteUploaded('categories', $category->image);
-         $category->image = $this->category->upload($request->file('image'), 'categories', false, false, false, true);
+         $category->image = $this->category->upload($request->file('image'), 'categories');
       }
       $category->save(); 
       return $category;

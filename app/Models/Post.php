@@ -15,7 +15,9 @@ class Post extends MyModel
         'city' => 'string',
         'number_of_likes' => 'integer',
         'number_of_comments' => 'integer',
-        'is_mine' => 'boolean'
+        'is_mine' => 'boolean',
+        'is_liked' => 'boolean',
+        'is_abused' => 'boolean'
     ];
     
     public function user()
@@ -44,7 +46,12 @@ class Post extends MyModel
         $transformer = new \stdClass();
         $transformer->id = $this->id;
         $transformer->user_id = $this->user_id;
-        $transformer->name = $this->company_id;
+        if ($this->getLangCode() == 'ar') {
+            $transformer->name = $this->name_ar;
+        } else {
+            $transformer->name = $this->name_en;
+        }
+        $transformer->company_id = $this->company_id;
         $transformer->image = url("public/uploads/users/$this->company_image");
         $transformer->is_featured = $this->is_featured ? true : false;
         $transformer->country = $this->country;
@@ -57,6 +64,8 @@ class Post extends MyModel
         if ($this->auth_user()) {
             $transformer->is_liked = $this->is_liked ? true : false;
             $transformer->is_abused = $this->is_abused ? true : false;
+            $transformer->following = $this->following ? true : false;
+            
             if (is_bool($this->is_mine)) {
                 $transformer->is_mine = $this->is_mine;
             }

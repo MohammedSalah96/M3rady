@@ -134,6 +134,17 @@ class ContactMessagesController extends BackendController {
                         ->editColumn('created_at', function ($item) {
                             return $item->created_at->format('Y/m/d - h:i a');
                         })
+                        ->editColumn('type', function ($item) {
+                            if ($item->type == $this->contactMessageRepository->types['managerial']) {
+                                $message = _lang('app.managerial');
+                                $class = 'label-light-warning';
+                            } else {
+                                $message = _lang('app.complaint_or_Suggestion');
+                                $class = 'label-light-info';
+                            }
+                            $back = '<span class="label label-lg font-weight-bold label-inline ' . $class . '">' . $message . '</span>';
+                            return $back;
+                        })
                         ->escapeColumns([])
                         ->make(true);
     }

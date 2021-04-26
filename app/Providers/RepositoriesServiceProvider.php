@@ -211,6 +211,10 @@ class RepositoriesServiceProvider extends ServiceProvider
             'App\Repositories\Api\SettingTranslation\SettingTranslationRepositoryInterface',
             'App\Repositories\Api\SettingTranslation\SettingTranslationRepository'
         );
+        $this->app->bind(
+            'App\Repositories\Api\CompanyCategory\CompanyCategoryRepositoryInterface',
+            'App\Repositories\Api\CompanyCategory\CompanyCategoryRepository'
+        );
 
 
         

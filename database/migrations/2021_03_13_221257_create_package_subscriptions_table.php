@@ -17,7 +17,7 @@ class CreatePackageSubscriptionsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->bigInteger('package_id')->unsigned();
+            $table->bigInteger('package_id')->unsigned()->nullable();
             $table->foreign('package_id')->references('id')->on('packages');
             $table->decimal('price',8,2);
             $table->integer('duration');

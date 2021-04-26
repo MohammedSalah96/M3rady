@@ -18,7 +18,8 @@ class PriceRequestsController extends ApiController
         'country' => 'required',
         'city' => 'required',
         'request' => 'required',
-        'company' => 'required'
+        'company' => 'required',
+        'image' => 'mimes:jpg,png,jpeg'
     ];
 
     private $listRules = [
@@ -77,10 +78,10 @@ class PriceRequestsController extends ApiController
                 $errors = $validator->errors()->toArray();
                 return _api_json('', ['errors' => $errors], 400);
             } 
-            if (!$this->priceRequestRepository->allowedToRequest()) {
+            /*if (!$this->priceRequestRepository->allowedToRequest()) {
                 $message = _lang('app.you_cannot_send_another_request_until_24_hours_have_passed_since_the_last_request_sent');
                 return _api_json('', ['message' => $message], 400);
-            }
+            }*/
             DB::beginTransaction();
             $priceRequest = $this->priceRequestRepository->create($request);
             $this->notificationRepository->send($request->input('company'), $this->notificationRepository->types['price_request'], $priceRequest->id);

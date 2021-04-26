@@ -30,6 +30,22 @@ trait ModelTrait {
         return $user;
     }
 
+    protected function buildTree($elements, $transformer = 'treeTransform', $parentId = 0)
+    {
+        $branches = array();
+        foreach ($elements as $key => $element) {
+            if ($element->parent_id == $parentId) {
+                $childrens = array();
+                $childrens = $this->buildTree($elements, $transformer, $element->id);
+                if ($childrens) {
+                    $element['childrens'] = $childrens;
+                }
+                $branches[] = $element->{$transformer}();
+            }
+        }
+        return $branches;
+    }
+
     protected static function transformCollection($items, $type = null, $extra_params = array()) {
 
         $transformers = array();
@@ -123,7 +139,21 @@ trait ModelTrait {
 
                     /* insert watermark at bottom-right corner with 10px offset */
                     if ($waterMark) {
-                        $image->insert(public_path('backend/media/logos/water-mark.jpeg'), 'bottom-right', 10, 10);
+                        $watermark =  Image::make(public_path('backend/media/logos/water-mark.png'));
+
+                        $watermarkSize = $image->width() - 20; //size of the image minus 20 margins
+                        //#2
+                        $watermarkSize = $image->width() / 2; //half of the image size
+                        //#3
+                        $resizePercentage = 20; //70% less then an actual image (play with this value)
+                        $watermarkSize = round($image->width() * ((100 - $resizePercentage) / 100), 2); //watermark will be $resizePercentage less then the actual width of the image
+                       
+                        // resize watermark width keep height auto
+                        $watermark->resize($watermarkSize, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                        });
+                        //insert resized watermark to image center aligned
+                        $image->insert($watermark, 'bottom-left', 10, 10);
                     }
 
                     $image = $image->save($path_with_filename, 100);
@@ -134,8 +164,24 @@ trait ModelTrait {
                 return $names[0];
             }
         }
+       
+
         if ($waterMark) {
-            $image->insert(public_path('backend/media/logos/water-mark.jpeg'), 'bottom-right', 10, 10);
+            $watermark =  Image::make(public_path('backend/media/logos/water-mark.png'));
+
+            $watermarkSize = $image->width() - 20; //size of the image minus 20 margins
+            //#2
+            $watermarkSize = $image->width() / 2; //half of the image size
+            //#3
+            $resizePercentage = 80; //70% less then an actual image (play with this value)
+            $watermarkSize = round($image->width() * ((100 - $resizePercentage) / 100), 2); //watermark will be $resizePercentage less then the actual width of the image
+
+            // resize watermark width keep height auto
+            $watermark->resize($watermarkSize, null, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            //insert resized watermark to image center aligned
+            $image->insert($watermark, 'bottom-left', 10, 10);
         }
         $path_with_filename = $path . '/' . $filename;
         $image = $image->save($path_with_filename);

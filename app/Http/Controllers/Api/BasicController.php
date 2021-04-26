@@ -22,7 +22,8 @@ class BasicController extends ApiController {
     private $contactRules = [
         'name' => 'required',
         'mobile' => 'required',
-        'message' => 'required'
+        'message' => 'required',
+        'type' => 'required|in:1,2'
     ];
 
     private $subscribeRules = [

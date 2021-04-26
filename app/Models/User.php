@@ -74,6 +74,31 @@ class User extends Authenticatable implements UserInterface {
         return $this->hasMany(Rate::class, 'user_id');
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id');
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(CompanyCategory::class, 'company_id');
+    }
+
+    public function companyCategories()
+    {
+        $langCode = $this->getLangCode();
+        $companyCategories =  $this->hasMany(CompanyCategory::class, 'company_id')
+                    ->join('categories','company_categories.category_id','=', 'categories.id')
+                    ->join('category_translations', function ($query) use($langCode){
+                        $query->on('categories.id', '=', 'category_translations.category_id')
+                            ->where('category_translations.locale', $langCode);
+                    })
+                    ->select('categories.id', 'categories.parent_id', 'category_translations.name')
+                    ->get();
+                    
+        return $this->buildTree($companyCategories);
+    }
+
 
     public function transform()
     {
@@ -106,11 +131,13 @@ class User extends Authenticatable implements UserInterface {
             }
             $transformer->is_featured = $userSubscription && $userSubscription->end_date >= date('Y-m-d') ? true : false;
             $transformer->company_details = $companyDetails->transform();
+            $transformer->categories = $this->companyCategories();
             $transformer->posts_count = $this->posts()->count();
             $transformer->followers_count = $this->followers()->count();
         }
         $transformer->followings_count = $this->followings()->count();
         $transformer->likes_count = $this->likes()->count();
+        $transformer->notifications_count = $this->notifications()->where('status',false)->count();
         return $transformer;
     }
 
@@ -118,7 +145,12 @@ class User extends Authenticatable implements UserInterface {
     {
         $transformer = new \stdClass();
         $transformer->id = $this->id;
-        $transformer->name = $this->company_id;
+        $transformer->company_id = $this->company_id;
+        if ($this->getLangCode() == 'ar') {
+            $transformer->name = $this->name_ar;
+        } else {
+            $transformer->name = $this->name_en;
+        }
         $transformer->image = url("public/uploads/users/$this->image");
         $transformer->country = $this->country;
         $transformer->city = $this->city;
@@ -130,7 +162,7 @@ class User extends Authenticatable implements UserInterface {
     {
         $transformer = new \stdClass();
         $transformer->id = $this->id;
-        $transformer->name = $this->company_id;
+        $transformer->company_id = $this->company_id;
         $transformer->email = $this->email;
         $transformer->image = url("public/uploads/users/$this->image");
         $transformer->country = $this->country;
@@ -142,8 +174,11 @@ class User extends Authenticatable implements UserInterface {
             $transformer->is_rated = $this->is_rated ? true : false;
             $transformer->is_followed = $this->is_followed ? true : false;
         }
-        $transformer->name_ar = $this->name_ar;
-        $transformer->name_en = $this->name_en;
+        if ($this->getLangCode() == 'ar') {
+            $transformer->name = $this->name_ar;
+        }else{
+            $transformer->name = $this->name_en;
+        }
         $transformer->description = $this->description;
         $transformer->mobile = $this->dial_code.''.$this->mobile;
         $transformer->whatsapp = $this->whatsapp;
@@ -157,9 +192,27 @@ class User extends Authenticatable implements UserInterface {
 
         return $transformer;
     }
+
+    public function transformUserProfile()
+    {
+        $transformer = new \stdClass();
+       
+        $transformer->name = $this->name;
+        $transformer->email = $this->email;
+        $transformer->dial_code = $this->dial_code;
+        $transformer->mobile = $this->mobile ?: "";
+        $transformer->country = $this->country;
+        $transformer->city = $this->city;
+        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+            $transformer->image = $this->image;
+        } else {
+            $transformer->image = url("public/uploads/users/$this->image");
+        }
+        return $transformer;
+    }
     
 
-   
+    
     
     protected static function boot() {
         parent::boot();

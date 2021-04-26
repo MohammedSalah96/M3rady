@@ -6,10 +6,11 @@ use DB;
 use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
-use App\Repositories\Api\CompanyDetails\CompanyDetailsRepositoryInterface;
-use App\Repositories\Api\Device\DeviceRepositoryInterface;
 use App\Repositories\Api\Post\PostRepositoryInterface;
 use App\Repositories\Api\User\UserRepositoryInterface;
+use App\Repositories\Api\Device\DeviceRepositoryInterface;
+use App\Repositories\Api\CompanyDetails\CompanyDetailsRepositoryInterface;
+use App\Repositories\Api\CompanyCategory\CompanyCategoryRepositoryInterface;
 
 class RegisterController extends ApiController {
 
@@ -47,8 +48,7 @@ class RegisterController extends ApiController {
         'name_ar' => 'required',
         'name_en' => 'required',
         'company_description' => 'required',
-        'main_category' => 'required',
-        'sub_category' => 'required',
+        'categories' => 'required',
         'lat' => 'required',
         'lng' => 'required'
     ];
@@ -57,12 +57,14 @@ class RegisterController extends ApiController {
     private $deviceRepository;
     private $companyDetailsRepository;
     private $postRepository;
+    private $companyCategoryRepository;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
         DeviceRepositoryInterface $deviceRepository,
         CompanyDetailsRepositoryInterface $companyDetailsRepository,
-        PostRepositoryInterface $postRepository
+        PostRepositoryInterface $postRepository,
+        CompanyCategoryRepositoryInterface $companyCategoryRepository
      ) 
      {
         parent::__construct();
@@ -70,6 +72,7 @@ class RegisterController extends ApiController {
         $this->deviceRepository = $deviceRepository;
         $this->companyDetailsRepository = $companyDetailsRepository;
         $this->postRepository = $postRepository;
+        $this->companyCategoryRepository = $companyCategoryRepository;
 
     }
 
@@ -109,7 +112,8 @@ class RegisterController extends ApiController {
             $tokenDetails = $this->userRepository->issueToken($user);
             $this->deviceRepository->createOrUpdate($request, $user);
             if ($request->input('type') == $this->userRepository->types['company']) {
-            $this->companyDetailsRepository->create($request, $user);
+                $this->companyDetailsRepository->create($request, $user);
+                $this->companyCategoryRepository->create(json_decode($request->input('categories')), $user);
                 if ($request->file('images')) {
                    $this->postRepository->create($request, $user);
                    $this->companyDetailsRepository->decreaseFreePosts($user->id);
@@ -129,6 +133,7 @@ class RegisterController extends ApiController {
             
         } catch (\Exception $ex) {
             DB::rollback();
+            dd($ex);
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
         }

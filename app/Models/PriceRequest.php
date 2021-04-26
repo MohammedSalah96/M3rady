@@ -56,6 +56,9 @@ class PriceRequest extends MyModel {
         $transformer->city = $this->city;
         $transformer->city_id = $this->city_id;
         $transformer->request = $this->request;
+        if ($this->images) {
+            $transformer->images = $this->images ? preg_filter('/^/', url('public/uploads/price_requests') . '/', json_decode($this->images)) : [];
+        }
         if ($this->reply) {
             $transformer->reply = $this->reply;
             $transformer->answered = true;

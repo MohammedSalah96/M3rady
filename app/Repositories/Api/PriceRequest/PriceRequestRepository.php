@@ -38,6 +38,13 @@ class PriceRequestRepository extends BaseRepository implements BaseRepositoryInt
         $priceRequest->city_id = $request->input('city');
         $priceRequest->user_id = $this->authUser()->id;
         $priceRequest->company_id = $request->input('company');
+        if ($request->file('images')) {
+            $images = [];
+            foreach ($request->file('images') as $image) {
+                $images[] = $this->priceRequest->upload($image, 'price_requests');
+            }
+            $priceRequest->images = json_encode($images);
+        }
         $priceRequest->save();
 
         return $priceRequest;

@@ -39,9 +39,15 @@
   Route::get('companies/{id}', 'CompaniesController@show');
 
   Route::group(['middleware' => 'jwt.auth'], function () {
-   
-    Route::get('profile', 'UserController@getUser');
+
+    Route::get('users/{id}', 'UserController@getUser');
+
+    Route::get('profile', 'UserController@getUserProfile');
     Route::put('profile', 'UserController@updateUser');
+
+    Route::get('subscription', 'UserController@getUserSubscription');
+
+    
     Route::post('logout','UserController@logout');
     Route::post('update_lang','UserController@updateLang');
     Route::post('follow/{id}', 'UserController@handleFollow');
@@ -58,6 +64,7 @@
 
     
     Route::post('comments','CommentsController@store');
+    Route::put('comments/{id}', 'CommentsController@update');
     Route::delete('comments/{id}', 'CommentsController@destroy');
 
     Route::post('rates', 'RatesController@store');

@@ -20,6 +20,20 @@ class UserRepository extends BaseRepository implements BaseRepositoryInterface, 
         $this->types = $this->user->types;
     }
 
+    public function userProfile($id){
+        return $this->user->join('location_translations as country_translations',function($query){
+                                $query->on('users.country_id','=','country_translations.location_id')
+                                ->where('country_translations.locale',$this->langCode);
+                            })
+                            ->join('location_translations as city_translations',function($query){
+                                $query->on('users.city_id','=','city_translations.location_id')
+                                ->where('city_translations.locale',$this->langCode);
+                            })
+                            ->select('users.*', 'country_translations.name as country','city_translations.name as city')
+                            ->where('users.id',$id)
+                            ->first();
+    }
+
     public function register(Request $request)
     {
         $user = new $this->user;

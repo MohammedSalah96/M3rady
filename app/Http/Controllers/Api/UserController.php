@@ -10,8 +10,10 @@ use App\Http\Controllers\ApiController;
 use App\Repositories\Api\User\UserRepositoryInterface;
 use App\Repositories\Api\Device\DeviceRepositoryInterface;
 use App\Repositories\Api\Follower\FollowerRepositoryInterface;
-use App\Repositories\Api\CompanyDetails\CompanyDetailsRepositoryInterface;
 use App\Repositories\Api\Notification\NotificationRepositoryInterface;
+use App\Repositories\Api\CompanyDetails\CompanyDetailsRepositoryInterface;
+use App\Repositories\Api\CompanyCategory\CompanyCategoryRepositoryInterface;
+use App\Repositories\Api\PackageSubscription\PackageSubscriptionRepositoryInterface;
 
 class UserController extends ApiController {
 
@@ -20,14 +22,19 @@ class UserController extends ApiController {
     private $followerRepository;
     private $deviceRepository;
     private $notificationRepository;
-    
+    private $packageSubscriptionRepository;
+    private $companyCategoryRepository;
+
+
 
     public function __construct(
         UserRepositoryInterface $userRepository,
         CompanyDetailsRepositoryInterface $companyDetailsRepository,
         FollowerRepositoryInterface $followerRepository,
         DeviceRepositoryInterface $deviceRepository,
-        NotificationRepositoryInterface $notificationRepository
+        NotificationRepositoryInterface $notificationRepository,
+        PackageSubscriptionRepositoryInterface $packageSubscriptionRepository,
+        CompanyCategoryRepositoryInterface $companyCategoryRepository
         ) {
         parent::__construct();
         $this->userRepository = $userRepository;
@@ -35,6 +42,8 @@ class UserController extends ApiController {
         $this->followerRepository = $followerRepository;
         $this->deviceRepository = $deviceRepository;
         $this->notificationRepository = $notificationRepository;
+        $this->packageSubscriptionRepository = $packageSubscriptionRepository;
+        $this->companyCategoryRepository = $companyCategoryRepository;
     }
 
     public function getToken(Request $request)
@@ -61,6 +70,32 @@ class UserController extends ApiController {
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
             return _api_json('', ['message' => $message], 400);
+        }
+    }
+
+    public function getUser($id)
+    {
+        try {
+            $user = $this->userRepository->userProfile($id);
+            if (!$user) {
+                $message = _lang('app.not_found');
+                return _api_json(new \stdClass(), ['message' => $message], 404);
+            }
+            return _api_json($user->transformUserProfile());
+        } catch (\Exception $ex) {
+            $message = _lang('app.something_went_wrong');
+            return _api_json(new \stdClass(), ['message' => $message], 400);
+        }
+    }
+
+    public function getUserSubscription()
+    {
+        try {
+            $subscription = $this->packageSubscriptionRepository->authSubscription();
+            return _api_json($subscription->transform());
+        } catch (\Exception $ex) {
+            $message = _lang('app.something_went_wrong');
+            return _api_json(new \stdClass(), ['message' => $message], 400);
         }
     }
 
@@ -107,6 +142,9 @@ class UserController extends ApiController {
             $user = $this->userRepository->updateProfile($request);
             if ($user->type == $this->userRepository->types['company']) {
                $this->companyDetailsRepository->update($request, $user);
+               if ($request->input('categories')) {
+                    $this->companyCategoryRepository->update(json_decode($request->input('categories')), $user);
+               }
             }
             DB::commit();
             $message = _lang('app.updated_successfully');
@@ -119,12 +157,13 @@ class UserController extends ApiController {
 
     }
 
-    public function getUser()
+    public function getUserProfile()
     {
         try {
             $user = $this->userRepository->authUser();
             return _api_json($user->transform());
         } catch (\Exception $ex) {
+            dd($ex);
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
         }

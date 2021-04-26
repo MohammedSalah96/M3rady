@@ -57,7 +57,7 @@ return [
         ],
         [
             'name' =>    'package_subscriptions',
-            'actions' => 'open'
+            'actions' => 'open,add,delete'
         ],
         [
             'name' =>    'banners',

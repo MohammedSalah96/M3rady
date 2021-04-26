@@ -23,6 +23,7 @@ class ContactMessageRepository extends BaseRepository implements BaseRepositoryI
         $contactMessage = new $this->contactMessage;
         $contactMessage->name = $request->input('name');
         $contactMessage->mobile = $request->input('mobile');
+        $contactMessage->type = $request->input('type');
         $contactMessage->message = $request->input('message');
         $contactMessage->save();
     }

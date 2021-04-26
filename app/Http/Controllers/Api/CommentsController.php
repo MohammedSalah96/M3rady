@@ -80,6 +80,33 @@ class CommentsController extends ApiController {
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        try {
+            $comment = $this->commentRepository->findForAuth($id);
+            if (!$comment) {
+                $message = _lang('app.not_found');
+                return _api_json(new \stdClass(), ['message' => $message], 404);
+            }
+            unset($this->rules['post_id']);
+            $validator = Validator::make($request->all(), $this->rules);
+            if ($validator->fails()) {
+                $errors = $validator->errors()->toArray();
+                return _api_json(new \stdClass(), ['errors' => $errors], 400);
+            }
+            DB::beginTransaction();
+            $comment = $this->commentRepository->update($request, $comment);
+            $comment = $this->commentRepository->find($comment->id)->transform();
+            $message = _lang('app.updated_successfully');
+            DB::commit();
+            return _api_json($comment, ['message' => $message]);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            $message = _lang('app.something_went_wrong');
+            return _api_json(new \stdClass(), ['message' => $message], 400);
+        }
+    }
+
     public function destroy($id)
     {
         try {

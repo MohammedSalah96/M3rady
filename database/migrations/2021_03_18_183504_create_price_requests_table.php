@@ -19,6 +19,7 @@ class CreatePriceRequestsTable extends Migration
             $table->string('email', 400);
             $table->string('mobile');
             $table->text('request');
+            $table->text('images');
             $table->text('reply');
             $table->bigInteger('country_id')->unsigned()->nullable();
             $table->foreign('country_id')->references('id')->on('locations');

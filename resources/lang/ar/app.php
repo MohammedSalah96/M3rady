@@ -161,7 +161,13 @@ return [
     'sub_categories' => 'الأقسام الفرعية',
     'countries' => 'البلاد',
     'cities' => 'المدن',
-    'profit' => 'الربح'
+    'profit' => 'الربح',
+    'type' => 'النوع',
+    'subscription' => 'اشتراك',
+    'trial' => 'تجريبي',
+    'months' => 'شهور',
+    'days' => 'ايام',
+    'add_subscription' => 'اضافة اشتراك'
 
 
     

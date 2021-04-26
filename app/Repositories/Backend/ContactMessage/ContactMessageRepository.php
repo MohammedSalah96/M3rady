@@ -10,11 +10,13 @@ use App\Repositories\Backend\BaseRepositoryInterface;
 class ContactMessageRepository extends BaseRepository implements BaseRepositoryInterface,ContactMessageRepositoryInterface
 {
     private $contactMessage;
+    public $types;
 
     public function __construct(ContactMessage $contactMessage)
     {
         parent::__construct();
         $this->contactMessage = $contactMessage;
+        $this->types = $this->contactMessage->types;
     }
 
     public function find($id, array $conditions = [])

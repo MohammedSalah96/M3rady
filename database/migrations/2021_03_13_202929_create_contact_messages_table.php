@@ -18,6 +18,7 @@ class CreateContactMessagesTable extends Migration
             $table->string('name', 400);
             $table->string('mobile', 255);
             $table->longText('message');
+            $table->integer('type');
             $table->timestamps();
         });
     }

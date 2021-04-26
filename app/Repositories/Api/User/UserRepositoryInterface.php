@@ -11,6 +11,7 @@ interface UserRepositoryInterface{
     public function checkAuth(array $credentials);
     public function issueToken($user);
     public function canPost();
+    public function userProfile($id);
 
     public function checkUserForResest($mobile);
     public function updatePassword($user, $password);

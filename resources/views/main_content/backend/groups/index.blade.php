@@ -17,7 +17,7 @@
 
 @section('content')
 <div class="modal fade" id="addEditGroups" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">

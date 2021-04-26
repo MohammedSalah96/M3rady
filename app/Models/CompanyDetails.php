@@ -34,8 +34,6 @@ class CompanyDetails extends MyModel
         $transformer->name_ar = $this->name_ar;
         $transformer->name_en = $this->name_en;
         $transformer->description = $this->description;
-        $transformer->main_category_id = $this->main_category_id;
-        $transformer->sub_category_id = $this->sub_category_id;
         $transformer->allowed_to_rate = $this->allowed_to_rate;
         $transformer->lat = $this->lat;
         $transformer->lng = $this->lng;

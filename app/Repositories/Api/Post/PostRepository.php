@@ -94,6 +94,8 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
         $columns = [
             'posts.*',
             'company_details.company_id',
+            'company_details.name_ar',
+            'company_details.name_en',
             'users.image as company_image',
             'country_translations.name as country',
             'city_translations.name as city',
@@ -124,6 +126,10 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                 $posts->leftJoin('abuses',function($query) use($user){
                                     $query->on('posts.id','=','abuses.post_id')
                                     ->where('abuses.user_id',$user->id);
+                                })
+                                ->leftJoin('followers',function($query) use($user){
+                                    $query->on('posts.user_id','=', 'followers.following_id')
+                                    ->where('followers.follower_id', $user->id);
                                 });
                                 if ($request->input('likes')) {
                                     $posts->join('likes',function($query) use($user){
@@ -142,7 +148,7 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                 $columns = array_merge($columns, [
                                     'likes.id as is_liked',
                                     'abuses.id as is_abused',
-                                   
+                                    'followers.id as following'
                                 ]);
                                 if ($user->type == $user->types['company']) {
                                     if (!$id && !$request->input('mine') && !$request->input('likes')) {
@@ -173,7 +179,10 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                     
                                     if ($request->input('feed')) {
                                         if ($request->input('category')) {                     
-                                            $posts->where('company_details.sub_category_id', $request->input('category'))
+                                            $posts->join('company_categories',function($query) use($request){
+                                                $query->on('company_categories.company_id','=','posts.user_id')
+                                                ->where('company_categories.category_id', $request->input('category'));
+                                            })
                                             ->where('posts.id',\DB::raw('(select max(id) from posts where posts.user_id = users.id)'))
                                             ->orderByRaw('ISNULL(is_featured)')
                                             ->orderBy('posts.created_at','desc');
@@ -185,13 +194,16 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                             $posts->where('users.city_id', $request->input('city'));
                                         }
                                         if ($request->input('search')) {
-                                            $posts->whereRaw($this->post->handleKeywordWhere(['company_details.company_id'],$request->input('search')));
-                                            if (!$request->input('category')) {
-                                                $posts->where('posts.id', \DB::raw('(select max(id) from posts where posts.user_id = users.id)'))
-                                                    ->orderByRaw('ISNULL(is_featured)')
-                                                    ->orderBy('posts.created_at', 'desc');
-                                            }
-                                         
+                                            $posts->where(function($query) use($request){
+                                                $query->whereRaw($this->post->handleKeywordWhere(
+                                                ['company_details.company_id',
+                                                 'company_details.name_ar',
+                                                  'company_details.name_en'
+                                                ],$request->input('search')));
+                                            })
+                                            ->where('posts.id', \DB::raw('(select max(id) from posts where posts.user_id = users.id)'))
+                                            ->orderByRaw('ISNULL(is_featured)')
+                                            ->orderBy('posts.created_at','desc');
                                         }
                                         if ($request->input('order_by')) {
                                             switch ($request->input('order_by')) {

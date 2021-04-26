@@ -39,6 +39,15 @@ class CommentRepository extends BaseRepository implements BaseRepositoryInterfac
         return $comment;
     }
 
+    public function update(Request $request, $comment){
+        $comment->comment = $request->input('comment');
+        if ($request->file('image')) {
+            $comment->image = $this->comment->upload($request->file('image'), 'comments');
+        }
+        $comment->save();
+        return $comment;
+    }
+
     public function findForAuth($id){
         return $this->comment->where('user_id',$this->authUser()->id)->where('id',$id)->first();
     }
