@@ -41,7 +41,7 @@ return [
         'redirect' => '',
     ],
     'apple' => [
-        'client_id' => '2170570492972312',
+        'client_id' => 'm3radyid',
         'client_secret' => '',
         'redirect' => '',
     ],

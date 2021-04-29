@@ -27,15 +27,13 @@ class PackageSubscription extends MyModel
         $transformer->end_date = $this->end_date;
         $transformer->type = $this->package_id ? _lang('app.subscription') : _lang('app.trial');
         if ($this->package_id) {
-            $duration = $this->duration . ' ' . _lang('app.months');
+            $duration = $this->duration;
         } else {
-            $start_date = strtotime($this->start_date);
-            $end_date = strtotime($this->end_date);
-            $datediff = $end_date - $start_date;
-            $duration = round($datediff / (60 * 60 * 24));
-            $duration = $duration . ' ' . _lang('app.days');
+            $duration = getDateDifferenceDays($this->start_date, $this->end_date);
         }
-        $transformer->duration = $duration;
+        $transformer->duration = $duration.' '._lang('app.days');
+        $transformer->remaining = getDateDifferenceDays(date('Y-m-d'), $this->end_date) . ' ' . _lang('app.days');
+        $transformer->expired = $transformer->remaining == 0 ? true : false;
         return $transformer;
     }
 

@@ -35,8 +35,8 @@ class CompanyDetails extends MyModel
         $transformer->name_en = $this->name_en;
         $transformer->description = $this->description;
         $transformer->allowed_to_rate = $this->allowed_to_rate;
-        $transformer->lat = $this->lat;
-        $transformer->lng = $this->lng;
+        $transformer->lat = $this->lat ?: "";
+        $transformer->lng = $this->lng ?: "";
         $transformer->whatsapp = $this->whatsapp;
         $transformer->facebook = $this->facebook;
         $transformer->twitter = $this->twitter;

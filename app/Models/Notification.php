@@ -6,6 +6,8 @@ class Notification extends MyModel
 {
     protected $table = "notifications";
     protected $casts = [
+        'id' => 'integer',
+        'type' => 'integer',
         'entity' => 'integer'
     ];
 
@@ -14,7 +16,8 @@ class Notification extends MyModel
         'like' => 2,
         'comment' => 3,
         'price_request' => 4,
-        'price_request_reply' => 5
+        'price_request_reply' => 5,
+        'general' => 6
     ];
 
     public $follow_messages = [
@@ -51,9 +54,14 @@ class Notification extends MyModel
     public function transform()
     {
         $transformer = new \stdClass();
-        $name = $this->company_id ?: $this->name;
+        $transformer->id = $this->id;
         $transformer->type = $this->type;
-        $transformer->body = $name . ' ' . $this->{array_search($this->type, $this->types) . "_messages"}[$this->getLangCode()];
+        if ($this->type != $this->types['general']) {
+            $name = $this->company_id ?: $this->name;
+            $transformer->body = $name . ' ' . $this->{array_search($this->type, $this->types) . "_messages"}[$this->getLangCode()];
+        }else{
+            $transformer->body = $this->body;
+        }
         if ($this->entity_id) {
             $transformer->entity_id = $this->entity_id;
         }

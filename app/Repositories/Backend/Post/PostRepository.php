@@ -68,12 +68,15 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
       if ($request->input('to')) {
          $posts->whereDate('posts.created_at', '<=', $request->input('to'));
       }
+      if ($request->input('has_abuses')) {
+         $posts->having('no_of_abuses','>',0);
+      }
       $posts = $posts->select('posts.*',
                                'company_details.company_id',
                                \DB::raw('(select count(*) from likes where post_id = posts.id) as no_of_likes'),
                                \DB::raw('(select count(*) from comments where post_id = posts.id) as no_of_comments'),
                                \DB::raw('(select count(*) from abuses where post_id = posts.id) as no_of_abuses')
-                              );
+                              )->orderBy('posts.created_at','desc');
       return $posts;
    }
    

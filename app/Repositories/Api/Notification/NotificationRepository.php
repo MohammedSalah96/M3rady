@@ -39,10 +39,15 @@ class NotificationRepository extends BaseRepository implements BaseRepositoryInt
     public function getForAuth()
     {
         $user = $this->authUser();
-        $notifications = $this->notification->join('users','notifications.created_by','=','users.id')
+        $notifications = $this->notification->leftJoin('users','notifications.created_by','=','users.id')
         ->leftJoin('company_details','users.id','=', 'company_details.user_id')
+        ->leftJoin('notification_translations', function ($query) {
+            $query->on('notification_translations.notification_id', '=', 'notifications.parent_id')
+                ->where('notification_translations.locale', $this->langCode)
+                ->where('notifications.type', $this->types['general']);
+        })
         ->where('notifications.user_id',$user->id)
-        ->select('notifications.*','users.name', 'company_details.company_id')
+        ->select('notifications.*','users.name', 'company_details.company_id', 'notification_translations.body')
         ->orderBy('notifications.created_at','desc')
         ->limit(60)
         ->paginate($this->limit);

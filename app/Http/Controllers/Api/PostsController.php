@@ -93,7 +93,7 @@ class PostsController extends ApiController
                 return _api_json('', ['errors' => $errors], 400);
             } 
             $post = $this->postRepository->create($request);
-            $this->companyDetailsRepository->decreaseFreePosts();
+            $this->companyDetailsRepository->increaseFreePosts();
             $message = _lang('app.posted_successfully');
             return _api_json('',['post_id' => $post->id,'message' => $message]);
         } catch (\Exception $ex) {

@@ -30,6 +30,7 @@ class PackageSubscriptionRepository extends BaseRepository implements  PackageSu
       if ($request->input('type') == 'trial') {
          $packageSubscription->start_date = $request->input('start_date');
          $packageSubscription->end_date = $request->input('end_date');
+         $packageSubscription->duration = getDateDifferenceDays($request->input('start_date'), $request->input('end_date'));
       }
       else if ($request->input('type') == 'subscription') {
          $package = $this->packageRepository->find($request->input('package'));
@@ -37,7 +38,7 @@ class PackageSubscriptionRepository extends BaseRepository implements  PackageSu
          $packageSubscription->price = $package->price;
          $packageSubscription->duration = $package->duration;
          $packageSubscription->start_date = date('Y-m-d');
-         $packageSubscription->end_date = date('Y-m-d', strtotime("+$package->duration months"));
+         $packageSubscription->end_date = date('Y-m-d', strtotime("+$package->duration days"));
       }
       $packageSubscription->save();
    }

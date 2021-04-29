@@ -48,9 +48,7 @@ class RegisterController extends ApiController {
         'name_ar' => 'required',
         'name_en' => 'required',
         'company_description' => 'required',
-        'categories' => 'required',
-        'lat' => 'required',
-        'lng' => 'required'
+        'categories' => 'required'
     ];
 
     private $userRepository;
@@ -116,7 +114,7 @@ class RegisterController extends ApiController {
                 $this->companyCategoryRepository->create(json_decode($request->input('categories')), $user);
                 if ($request->file('images')) {
                    $this->postRepository->create($request, $user);
-                   $this->companyDetailsRepository->decreaseFreePosts($user->id);
+                   $this->companyDetailsRepository->increaseFreePosts($user->id);
                 }
             }
             DB::commit();
@@ -133,7 +131,6 @@ class RegisterController extends ApiController {
             
         } catch (\Exception $ex) {
             DB::rollback();
-            dd($ex);
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
         }

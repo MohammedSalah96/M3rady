@@ -80,6 +80,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
 
     Route::resource('package_subscriptions', 'PackageSubscriptionsController');
     Route::post('package_subscriptions/data', 'PackageSubscriptionsController@data');
+
+    Route::resource('notifications', 'NotificationsController');
+
     
     
 

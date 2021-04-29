@@ -8,10 +8,12 @@ use Illuminate\Http\Request;
 use App\Repositories\Api\BaseRepository;
 use App\Repositories\Api\BaseRepositoryInterface;
 
+
 class UserRepository extends BaseRepository implements BaseRepositoryInterface, UserRepositoryInterface{
     
     private $user;
     public $types;
+    private $setting;
     
     public function __construct(User $user)
     {

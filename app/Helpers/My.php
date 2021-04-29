@@ -413,7 +413,7 @@ if (!function_exists('getAddress3')) {
      * @param string $lang
      * @return string
      */
-    function getAddress($lat, $lng, $lang = "AR") {
+    function getAddress3($lat, $lng, $lang = "AR") {
         $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&language=' . $lang . '&sensor=false';
         $json = @file_get_contents($url);
         $data = json_decode($json);
@@ -589,6 +589,17 @@ if (!function_exists('getAddress')) {
         }
     }
 
+}
+
+if (!function_exists('getDateDifferenceDays')) {
+
+    function getDateDifferenceDays($start_date, $end_date)
+    {
+        $start_date = strtotime($start_date);
+        $end_date = strtotime($end_date);
+        $diff = intval(round(($end_date - $start_date) / (60 * 60 * 24)));
+        return  $diff > 0 ? $diff : 0;
+    }
 }
 
 

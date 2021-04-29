@@ -46,6 +46,15 @@
                     </select>
                     <span class="invalid-feedback"></span>
                 </div>
+                <div class="form-group col-lg-4">
+                    
+                    <div class="checkbox-list">
+                        <label class="checkbox">
+                            <input type="checkbox" name="has_abuses">
+                            <span></span>{{ _lang('app.has_abuses') }}
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="card-footer">

@@ -45,7 +45,7 @@ class PackageRepository extends BaseRepository implements BaseRepositoryInterfac
       $package->active = $request->input('active');
       $package->position = $request->input('position');
       $package->price = $request->input('price');
-      $package->duration = $request->input('position');
+      $package->duration = $request->input('duration');
       $package->save();
       return $package;
    }
@@ -55,7 +55,7 @@ class PackageRepository extends BaseRepository implements BaseRepositoryInterfac
       $package->active = $request->input('active');
       $package->position = $request->input('position');
       $package->price = $request->input('price');
-      $package->duration = $request->input('position');
+      $package->duration = $request->input('duration');
       $package->save(); 
       return $package;
    }

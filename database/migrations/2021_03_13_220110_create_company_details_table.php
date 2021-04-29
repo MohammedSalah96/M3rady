@@ -19,9 +19,9 @@ class CreateCompanyDetailsTable extends Migration
             $table->string('name_ar',400);
             $table->string('name_en', 400);
             $table->text('description', 400);
-            $table->integer('available_free_posts');
-            $table->string('lat', 20);
-            $table->string('lng', 20);
+            $table->integer('available_free_posts')->default(0);
+            $table->string('lat', 20)->nullable();
+            $table->string('lng', 20)->nullable();
             $table->string('whatsapp', 500);
             $table->string('facebook', 500);
             $table->string('twitter', 500);

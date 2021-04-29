@@ -53,6 +53,8 @@ class CompanyRepository extends BaseRepository implements BaseRepositoryInterfac
                                         'users.id',
                                         'users.image',
                                         'company_details.company_id',
+                                        'company_details.name_ar',
+                                        'company_details.name_en',
                                         'country_translations.name as country',
                                         'city_translations.name as city',
                                         'package_subscriptions.id as is_featured');

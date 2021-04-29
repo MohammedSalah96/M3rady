@@ -124,6 +124,16 @@ class RepositoriesServiceProvider extends ServiceProvider
             'App\Repositories\Backend\PackageSubscription\PackageSubscriptionRepository'
         );
 
+        $this->app->bind(
+            'App\Repositories\Backend\Device\DeviceRepositoryInterface',
+            'App\Repositories\Backend\Device\DeviceRepository'
+        );
+
+        $this->app->bind(
+            'App\Repositories\Backend\Notification\NotificationRepositoryInterface',
+            'App\Repositories\Backend\Notification\NotificationRepository'
+        );
+
         
 
         /** api */

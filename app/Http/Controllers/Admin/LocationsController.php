@@ -63,7 +63,7 @@ class LocationsController extends BackendController
     {
         try {
             $columns_arr = array(
-                'name' => 'required|unique:location_translations,name'
+                'name' => 'required'
             );
             $lang_rules = $this->lang_rules($columns_arr);
             $this->rules = array_merge($this->rules, $lang_rules);
@@ -122,7 +122,7 @@ class LocationsController extends BackendController
                 return _json('error', _lang('app.this_item_doesn\'t_exist'), 404);
             }
             $columns_arr = array(
-                'name' => 'required|unique:location_translations,name,' . $id . ',location_id'
+                'name' => 'required'
             );
             $lang_rules = $this->lang_rules($columns_arr);
             $this->rules = array_merge($this->rules, $lang_rules);

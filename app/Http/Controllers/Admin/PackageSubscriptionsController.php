@@ -138,16 +138,7 @@ class PackageSubscriptionsController extends BackendController
                 return $back;
             })
             ->editColumn('duration', function ($item) {
-                if ($item->package_id) {
-                    $back = $item->duration.' '._lang('app.months');
-                } else {
-                    $start_date = strtotime($item->start_date);
-                    $end_date = strtotime($item->end_date);
-                    $datediff = $end_date - $start_date;
-                    $duration = round($datediff / (60 * 60 * 24));
-                    $back = $duration . ' ' . _lang('app.days');
-                }
-                return $back;
+                return $item->duration . ' ' . _lang('app.days');
             })
             ->escapeColumns([])
             ->make(true);

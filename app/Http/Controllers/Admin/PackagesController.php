@@ -220,7 +220,7 @@ class PackagesController extends BackendController
             })
             ->editColumn('duration', function ($item) {
                 
-                return $item->duration.' '._lang('app.months');
+                return $item->duration.' '._lang('app.days');
             })
             ->escapeColumns([])
             ->make(true);

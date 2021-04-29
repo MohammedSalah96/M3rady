@@ -37,8 +37,6 @@ class CompanyDetailsRepository extends BaseRepository implements BaseRepositoryI
         $companyDetails->twitter = $request->input('twitter') ?: "";
         $companyDetails->website = $request->input('website') ?: "";
 
-        $companyDetails->available_free_posts = $this->setting->where('name', 'allowed_free_posts')->first()->value;
-
         $companyDetails->save();
     }
 
@@ -79,14 +77,15 @@ class CompanyDetailsRepository extends BaseRepository implements BaseRepositoryI
         $companyDetails->save();
     }
 
-    public function decreaseFreePosts($userId = null)
+    public function increaseFreePosts($userId = null)
     {
-        $comapnyDetails = $this->companyDetails->where('available_free_posts', '<>', 0);
+        $allowedFreePosts = $this->setting->where('name', 'allowed_free_posts')->first()->value;
+        $comapnyDetails = $this->companyDetails->where('available_free_posts', '<', $allowedFreePosts);
         if ($userId) {
             $comapnyDetails->where('user_id', $userId);
         }else{
             $comapnyDetails->where('user_id', $this->authUser()->id);
         }
-        $comapnyDetails->update(['available_free_posts' => \DB::raw('(available_free_posts - 1)')]);
+        $comapnyDetails->update(['available_free_posts' => \DB::raw('(available_free_posts + 1)')]);
     }
 }

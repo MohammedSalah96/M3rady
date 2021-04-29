@@ -70,6 +70,10 @@ return [
         [
             'name' =>    'settings',
             'actions' => 'open'
+        ],
+        [
+            'name' =>    'notifications',
+            'actions' => 'open'
         ]  
         
     ]

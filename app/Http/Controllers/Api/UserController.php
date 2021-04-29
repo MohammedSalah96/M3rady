@@ -92,7 +92,7 @@ class UserController extends ApiController {
     {
         try {
             $subscription = $this->packageSubscriptionRepository->authSubscription();
-            return _api_json($subscription->transform());
+            return _api_json($subscription ? $subscription->transform() : new \stdClass());
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
@@ -163,7 +163,6 @@ class UserController extends ApiController {
             $user = $this->userRepository->authUser();
             return _api_json($user->transform());
         } catch (\Exception $ex) {
-            dd($ex);
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
         }

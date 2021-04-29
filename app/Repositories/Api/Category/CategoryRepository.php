@@ -36,7 +36,7 @@ class CategoryRepository extends BaseRepository implements BaseRepositoryInterfa
             })
             ->where('category_translations.name','like',"%".$request->input('search')."%");
         }
-        $categories = $categories->select('categories.*', 'locale_translations.name')->distinct()->get();
+        $categories = $categories->orderBy('categories.position')->select('categories.*', 'locale_translations.name')->distinct()->get();
 
         
         return $categories;

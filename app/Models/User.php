@@ -120,7 +120,7 @@ class User extends Authenticatable implements UserInterface {
         if ($this->type == $this->types['company']) {
             $companyDetails = $this->companyDetails;
             $userSubscription = $this->subscriptions()->latest()->first();
-            if ($companyDetails->available_free_posts != 0) {
+            if ($companyDetails->available_free_posts < Setting::where('name', 'allowed_free_posts')->first()->value) {
                 $transformer->allowed_to_post = true;
             } else {
                 if ($userSubscription && $userSubscription->end_date >= date('Y-m-d')) {
@@ -185,8 +185,8 @@ class User extends Authenticatable implements UserInterface {
         $transformer->facebook = $this->facebook;
         $transformer->twitter = $this->twitter;
         $transformer->website = $this->website;
-        $transformer->lat = $this->lat;
-        $transformer->lng = $this->lng;
+        $transformer->lat = $this->lat ?: "";
+        $transformer->lng = $this->lng ?: "";
         $transformer->posts_count = $this->posts()->count();
         $transformer->followers_count = $this->followers()->count();
 
