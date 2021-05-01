@@ -167,7 +167,16 @@ return [
     'trial' => 'تجريبي',
     'months' => 'شهور',
     'days' => 'ايام',
-    'add_subscription' => 'اضافة اشتراك'
+    'add_subscription' => 'اضافة اشتراك',
+    'managerial' => 'إدارية',
+    'complaint_or_Suggestion' => 'شكوى او مقترح',
+    'notifications' => 'الإشعارات',
+    'send_notification' => 'ارسل إشعار',
+    'all' => 'الجميع',
+    'send' => 'ارسال',
+    'sended_successfully' => 'ارسلت بنجاح',
+    'about_us' => 'من نحن',
+    'has_abuses' => 'به بلاغات إساءة',
 
 
     

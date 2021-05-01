@@ -36,7 +36,8 @@
                             <label>
                                 {{ _lang('app.company') }}
                             </label>
-                            <select class="form-control form-control-solid" id="company" name="company">
+                            
+                            <select class="form-control form-control-solid selectpicker" id="company" data-live-search="true" name="company">
                                 <option value="">{{_lang('app.choose')}}</option>
                                 @foreach ($companies as $company)
                                 <option value="{{$company->id}}">{{$company->name}}</option>

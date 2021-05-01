@@ -27,6 +27,22 @@ class BaseRepository {
        
     }
 
+    protected function buildTree($elements, $transformer = 'treeTransform', $parentId = 0)
+    {
+        $branches = array();
+        foreach ($elements as $key => $element) {
+            if ($element->parent_id == $parentId) {
+                $childrens = array();
+                $childrens = $this->buildTree($elements, $transformer, $element->id);
+                if ($childrens) {
+                    $element['childrens'] = $childrens;
+                }
+                $branches[] = $element->{$transformer}();
+            }
+        }
+        return $branches;
+    }
+
     
 
     

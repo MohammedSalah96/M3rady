@@ -7,11 +7,19 @@ var PackageSubscriptionsGrid, filterParams;
         handleRecords();
         handleDateRange('from','to');
         handleDateRange('start_date','end_date');
+        handleMultiSelect();
         handleFilter();
         handleSubscriptionTypeChange();
         handleSubmit();
+       
     };
 
+    var handleMultiSelect = function(){
+        $(".selectpicker").selectpicker({
+            noneSelectedText : lang.choose,
+        });
+
+    }
     var handleSubscriptionTypeChange = function(){
         $('#addSubscriptionForm #type').on('change',function(e){
             if (e.target.value == 'trial') {

@@ -61,11 +61,13 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
 
     public function update(Request $request, $post)
     {
-        $images = json_decode($post->images, true);
-        foreach ($request->file('images') as $image) {
-            $images[] = $this->post->upload($image, 'posts', false, false, false, true);
+        if ($request->file('images')) {
+            $images = json_decode($post->images, true);
+            foreach ($request->file('images') as $image) {
+                $images[] = $this->post->upload($image, 'posts', false, false, false, true);
+            }
+            $post->images = json_encode($images);
         }
-        $post->images = json_encode($images);
         if ($request->input('description')) {
             $post->description = $request->input('description');
         }

@@ -32,8 +32,6 @@ class CompanyDetailsRepository extends BaseRepository implements CompanyDetailsR
         $companyDetails->name_ar = $request->input('name_ar');
         $companyDetails->name_en = $request->input('name_en');
         $companyDetails->description = $request->input('description');
-        $companyDetails->main_category_id = $request->input('main_category');
-        $companyDetails->sub_category_id = $request->input('sub_category');
         $companyDetails->lat = $request->input('lat');
         $companyDetails->lng = $request->input('lng');
 
@@ -54,8 +52,6 @@ class CompanyDetailsRepository extends BaseRepository implements CompanyDetailsR
         $companyDetails->name_ar = $request->input('name_ar');
         $companyDetails->name_en = $request->input('name_en');
         $companyDetails->description = $request->input('description');
-        $companyDetails->main_category_id = $request->input('main_category');
-        $companyDetails->sub_category_id = $request->input('sub_category');
         $companyDetails->lat = $request->input('lat');
         $companyDetails->lng = $request->input('lng');
         $companyDetails->allowed_to_rate = $request->input('allowed_to_rate');

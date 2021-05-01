@@ -127,40 +127,34 @@
                     <input type="text" class="form-control form-control-solid" id="name_en" name="name_en">
                     <span class="invalid-feedback"></span>
                 </div>
-
-                
-
-               <div class="form-group col-md-4 col-sm-12">
+                <div class="form-group col-md-12 col-sm-12">
                     <label>
-                        {{ _lang('app.main_category') }}<span class="text-danger">*</span>
+                        {{ _lang('app.categories') }}<span class="text-danger">*</span>
                     </label>
-                    <select class="form-control form-control-solid" id="main_category" name="main_category">
-                        <option value="">{{ _lang('app.choose_category') }}</option>
+                    <select class="form-control form-control-solid selectpicker" data-live-search="true" id="categories"
+                        name="categories[]" multiple>
                         @foreach ($categories as $category)
-                            <option value="{{$category->id}}">{{ $category->name }}</option>
+                            <optgroup label="{{ $category->name }}">
+                                <option data-parent="0" value="{{$category->id}}">{{ $category->name }}</option>
+                                @foreach ($category->childrens as $child)
+                                    <option data-parent="1" value="{{$child->id}}">{{ $child->name }}</option>
+                                @endforeach
+                            </optgroup>
+                            
                         @endforeach
-                       
                     </select>
                     <span class="invalid-feedback"></span>
                 </div>
-                <div class="form-group col-md-4 col-sm-12">
-                    <label>
-                        {{ _lang('app.sub_category') }}<span class="text-danger">*</span>
-                    </label>
-                    <select class="form-control form-control-solid" id="sub_category" name="sub_category">
-                        <option value="">{{ _lang('app.choose_category') }}</option>
-                    </select>
-                    <span class="invalid-feedback"></span>
-                </div>
-               
-                <div class="form-group col-md-2 col-sm-12">
-                    <label for="lat">{{_lang('app.lat')}}<span class="text-danger">*</span></label>
+
+
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="lat">{{_lang('app.lat')}}</label>
                     <input type="text" class="form-control form-control-solid" id="lat" name="lat">
                     <span class="invalid-feedback"></span>
                 </div>
                 
-                <div class="form-group col-md-2 col-sm-12">
-                    <label for="lng">{{_lang('app.lng')}}<span class="text-danger">*</span></label>
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="lng">{{_lang('app.lng')}}</label>
                     <input type="text" class="form-control form-control-solid" id="lng" name="lng">
                     <span class="invalid-feedback"></span>
                 </div>
@@ -230,7 +224,6 @@
                     <th>{{ _lang('app.email')}}</th>
                     <th>{{ _lang('app.mobile')}}</th>
                     <th>{{ _lang('app.country')}}</th>
-                    <th>{{ _lang('app.category')}}</th>
                     <th>{{ _lang('app.status')}}</th>
                     <th>{{ _lang('app.options')}}</th>
                 </tr>

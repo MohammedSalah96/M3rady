@@ -26,9 +26,9 @@ class CategoryRepository extends BaseRepository implements BaseRepositoryInterfa
 
       if (!empty($conditions)) {
          $categories->where($conditions);
-      }     
-      
-      return $categories = $categories->select('categories.*', 'category_translations.name')->get();
+      }
+      $categories = $categories->select('categories.*', 'category_translations.name')->get();
+      return $this->buildTree($categories);
    }
 
    public function statistics($main = true)

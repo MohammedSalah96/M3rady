@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use DB;
+use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BackendController;
-use App\Repositories\Backend\Category\CategoryRepositoryInterface;
-use App\Repositories\Backend\CompanyDetails\CompanyDetailsRepositoryInterface;
-use App\Repositories\Backend\Location\LocationRepositoryInterface;
 use App\Repositories\Backend\User\UserRepositoryInterface;
-use Validator;
-use DB;
+use App\Repositories\Backend\Category\CategoryRepositoryInterface;
+use App\Repositories\Backend\Location\LocationRepositoryInterface;
+use App\Repositories\Backend\CompanyDetails\CompanyDetailsRepositoryInterface;
+use App\Repositories\Backend\CompanyCategory\CompanyCategoryRepositoryInterface;
 
 class CompaniesController extends BackendController
 {
@@ -24,22 +25,20 @@ class CompaniesController extends BackendController
         'name_ar' => 'required',
         'name_en' => 'required',
         'description' => 'required',
-        'main_category' => 'required',
-        'sub_category' => 'required',
-        'lat' => 'required',
-        'lng' => 'required',
         'type' => 'required'
     ];
     private $userRepository;
     private $locationRepository;
     private $companyDetailsRepository;
     private $categoryRepository;
+    private $companyCategoryRepository;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
         LocationRepositoryInterface $locationRepository,
         CompanyDetailsRepositoryInterface $companyDetailsRepository,
-        CategoryRepositoryInterface $categoryRepository
+        CategoryRepositoryInterface $categoryRepository,
+        CompanyCategoryRepositoryInterface $companyCategoryRepository
     )
     {
         parent::__construct();
@@ -53,13 +52,14 @@ class CompaniesController extends BackendController
         $this->companyDetailsRepository = $companyDetailsRepository;
         $this->locationRepository = $locationRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->companyCategoryRepository = $companyCategoryRepository;
     }
 
     public function index(Request $request)
     {
         try {
             $this->data['countries'] = $this->locationRepository->getByParent();
-            $this->data['categories'] = $this->categoryRepository->getByParent();
+            $this->data['categories'] = $this->categoryRepository->all();
             $this->data['type'] = $this->userRepository->types['company'];
             return $this->_view('companies.index');
         } catch (\Exception $ex) {
@@ -87,6 +87,9 @@ class CompaniesController extends BackendController
             DB::beginTransaction();
             $company = $this->userRepository->create($request);
             $this->companyDetailsRepository->create($request, $company);
+            if ($request->input('categories')) {
+                $this->companyCategoryRepository->create($request->input('categories'), $company);
+            }
             DB::commit();
             return _json('success', _lang('app.added_successfully'));
         } catch (\Exception $ex) {
@@ -108,6 +111,9 @@ class CompaniesController extends BackendController
             if (!$company) {
                 return _json('error', _lang('app.this_item_doesn\'t_exist'), 404);
             }
+            $companyCategories = $this->companyCategoryRepository->getForCompany($company);
+            $company->categories = $this->companyCategoryRepository->getForCompany($company)->pluck('category_id')->toArray();
+            $company->subCategoryCount= $companyCategories->where('parent_id','<>',0)->count();
             $companyDetails = $this->companyDetailsRepository->find($company->id);
             return _json('success', ['model' => $company,'details' => $companyDetails]);
         } catch (\Exception $ex) {
@@ -143,6 +149,9 @@ class CompaniesController extends BackendController
             DB::beginTransaction();
             $company = $this->userRepository->update($request, $id, $company);
             $this->companyDetailsRepository->update($request, $company);
+            if ($request->input('categories')) {
+                $this->companyCategoryRepository->update($request->input('categories'), $company);
+            }
             DB::commit();
             return _json('success', _lang('app.updated_successfully'));
         } catch (\Exception $ex) {

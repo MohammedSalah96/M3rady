@@ -221,6 +221,23 @@ class UserController extends ApiController {
         }
     }
 
+    public function deleteNotification(Request $request, $id)
+    {
+        try {
+            $notification = $this->notificationRepository->findForAuth($id);
+            if (!$notification) {
+                $message = _lang('app.not_found');
+                return _api_json('', ['message' => $message], 404);
+            }
+            $this->notificationRepository->delete($notification);
+            $message = _lang('app.deleted_successfully');
+            return _api_json('', ['message' => $message]);
+        } catch (\Exception $ex) {
+            $message = _lang('app.something_went_wrong');
+            return _api_json('', ['message' => $message], 400);
+        }
+    }
+
     public function logout(Request $request) {
         try {
             $this->deviceRepository->logout($request->input('device_id'));

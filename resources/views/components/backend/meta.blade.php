@@ -47,6 +47,15 @@
         font-size: 1.3rem;
     }
 </style>
+
+@if ($lang_code == 'ar')
+<style>
+    .bootstrap-select .dropdown-toggle .filter-option-inner-inner{
+        text-align: right;
+    }
+</style>
+    
+@endif
 <link rel="shortcut icon" href="{{url('public/backend/media/logos/favicon.ico')}}" />
 
 

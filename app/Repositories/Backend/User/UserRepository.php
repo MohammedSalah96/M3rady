@@ -102,14 +102,9 @@ class UserRepository extends BaseRepository implements BaseRepositoryInterface, 
                                  ->where('city_translations.locale', $this->langCode);
                               })->where('type',$type);
                               if ($type == $this->types['company']) {
-                                 $users->join('company_details', 'users.id','=', 'company_details.user_id')
-                                ->join('category_translations', function ($query) {
-                                 $query->on('company_details.main_category_id', '=', 'category_translations.category_id')
-                                    ->where('category_translations.locale', $this->langCode);
-                                 });
+                                 $users->join('company_details', 'users.id','=', 'company_details.user_id');
                                  $columns  = array_merge($columns,[
                                     'company_details.company_id',
-                                    'category_translations.name as category',
                                     \DB::raw('(select count(*) from posts where user_id = users.id) as no_of_posts'),
                                     \DB::raw('(select (sum(score)/count(*)) from rates where status = 1 and company_id = users.id) as rate')
                                  ]);

@@ -95,6 +95,11 @@ class RepositoriesServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            'App\Repositories\Backend\CompanyCategory\CompanyCategoryRepositoryInterface',
+            'App\Repositories\Backend\CompanyCategory\CompanyCategoryRepository'
+        );
+
+        $this->app->bind(
             'App\Repositories\Backend\Post\PostRepositoryInterface',
             'App\Repositories\Backend\Post\PostRepository'
         );
@@ -133,8 +138,8 @@ class RepositoriesServiceProvider extends ServiceProvider
             'App\Repositories\Backend\Notification\NotificationRepositoryInterface',
             'App\Repositories\Backend\Notification\NotificationRepository'
         );
+       
 
-        
 
         /** api */
         $this->app->bind(

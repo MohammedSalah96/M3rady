@@ -92,6 +92,7 @@ var PostsGrid, filterParams;
             "processing": true,
             responsive: true,
             "serverSide": true,
+            stateSave: true,
             "ajax": {
                 "url": config.admin_url + "/posts/data",
                 "type": "POST",

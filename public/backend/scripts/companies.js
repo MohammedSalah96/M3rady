@@ -1,5 +1,5 @@
 var Companies = function() {
-var CompaniesGrid, type;
+var CompaniesGrid, type, subCount = 0;
 
     var init = function() {
         $.extend(lang, newLang);
@@ -8,9 +8,47 @@ var CompaniesGrid, type;
         handleRecords();
         handleSubmit();
         handleCountryChange();
-        handleCategoryChange();
+        handleMultiSelect();
         kImage = new KTImageInput("kt_avatar");
     };
+
+    var handleMultiSelect = function(){
+        $(".selectpicker").selectpicker({
+            //actionsBox: true,
+            noneSelectedText : lang.choose,
+            multipleSeparator : ' - '
+        });
+
+        $('#categories').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            var selected = $('#categories').val();
+            var parent = $('.selectpicker option').eq(clickedIndex).data('parent');
+            if (parent == 1) {
+                if (isSelected == false) {
+                    if (subCount == 4) {
+                        $("#categories option").each(function()
+                        {
+                            $(this).attr('disabled',false);
+                        });
+                        $('#categories').selectpicker('refresh');
+                    }
+                    subCount -= 1;
+                }else{
+                    subCount += 1;
+                    if (subCount == 4) {
+                        $("#categories option").each(function()
+                        {
+                            if(jQuery.inArray($(this).val(), selected) == -1){
+                                $(this).attr('disabled',true);
+                            }
+                        });
+                        $('#categories').selectpicker('refresh');
+                    }
+                }
+            }
+        });
+
+    }
+
 
     var handleCountryChange = function () {
         $('#country').on('change', function (e) {
@@ -30,36 +68,6 @@ var CompaniesGrid, type;
                                options += '<option value="' + item.id + '">' + item.name + '</option>';
                            }
                            $('#city').append(options);
-                       }
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
-                        My.ajax_error_message(xhr);
-                    },
-                    dataType: "json",
-                    type: "GET"
-                });
-            }
-        });
-    }
-
-    var handleCategoryChange = function () {
-        $('#main_category').on('change', function (e) {
-            var data = {};
-            var main_category = $(this).val();
-            $('#sub_category').html('<option selected value="">' + lang.choose_category + '</option>');
-            if (main_category) {
-                $.ajax({
-                    url: config.admin_url + '/get_categories/' + main_category,
-                    data: data,
-                    success: function (data) {
-                        var options = '';
-                        var categories = data.data.categories;
-                       if (categories.length != 0) {
-                           for (var i = 0; i < categories.length; i++) {
-                               var item = categories[i];
-                               options += '<option value="' + item.id + '">' + item.name + '</option>';
-                           }
-                           $('#sub_category').append(options);
                        }
                     },
                     error: function (xhr, textStatus, errorThrown) {
@@ -98,10 +106,6 @@ var CompaniesGrid, type;
                 {
                     "data": "country",
                     "name": "country_translations.name"
-                },
-                {
-                    "data": "category",
-                    "name": "category_translations.name"
                 },
                 {
                     "data": "active",
@@ -160,19 +164,7 @@ var CompaniesGrid, type;
                 },
                 description: {
                     required: true
-                },
-                main_category: {
-                    required: true
-                },
-                sub_category: {
-                    required: true
-                },
-                lat: {
-                    required: true
-                },
-                lng: {
-                    required: true
-                },
+                }
             },
             messages:{
                 email:{
@@ -201,19 +193,7 @@ var CompaniesGrid, type;
                 },
                 description:{
                     required: lang.required_rule
-                },
-                main_category:{
-                    required: lang.required_rule
-                },
-                sub_category:{
-                    required: lang.required_rule
-                },
-                lat:{
-                    required: lang.required_rule
-                },
-                lng:{
-                    required: lang.required_rule
-                },
+                }
             },
             highlight: function(element) { // hightlight error inputs
             },
@@ -310,7 +290,6 @@ var CompaniesGrid, type;
                     var model = data.data.model;
                     var details = data.data.details;
                     var city = model['city_id'];
-                    var subCategory = details['sub_category_id'];
 
                     for (var key in model) {
                         if (key == 'image') {
@@ -323,6 +302,23 @@ var CompaniesGrid, type;
                             }
                             continue;
                         }else if(key == 'password'){
+                            continue;
+                        }
+                        else if (key == 'categories') {
+                            var selected = model[key];
+                            console.log(selected);
+                            $('#categories').selectpicker('val', selected);
+                            $('#categories').selectpicker('render');
+                            subCount = model['subCategoryCount'];
+                            if (subCount == 4) {
+                                $("#categories option").each(function()
+                                {
+                                    if(jQuery.inArray(parseInt($(this).val()), selected) == -1){
+                                        $(this).attr('disabled',true);
+                                    }
+                                });
+                            }
+                            $('#categories').selectpicker('refresh');
                             continue;
                         }
                         else if (key == 'country_id' || key == 'city_id') {
@@ -363,37 +359,6 @@ var CompaniesGrid, type;
                         if (key == 'id') {
                             continue;
                         }
-                        if (key == 'main_category_id' || key == 'sub_category_id') {
-                            $('[name="'+key.replace('_id', '')+'"]').val(details[key]);
-                            if (key == 'main_category_id') {
-                                    $('#sub_category').html('<option selected value="">' + lang.choose_category + '</option>');
-                                    $.ajax({
-                                        url: config.admin_url + '/get_categories/' + details[key],
-                                        data: data,
-                                        success: function (data) {
-                                            var options = '';
-                                            var categories = data.data.categories;
-                                            if (categories.length != 0) {
-                                                for (var i = 0; i < categories.length; i++) {
-                                                    var item = categories[i];
-                                                    var selected = "";
-                                                    if (item.id == subCategory) {
-                                                        selected = "selected";
-                                                    }
-                                                    options += '<option value="' + item.id + '" ' + selected + '>' + item.name + '</option>';
-                                                }
-                                                $('#sub_category').append(options);
-                                            }
-                                        },
-                                        error: function (xhr, textStatus, errorThrown) {
-                                            My.ajax_error_message(xhr);
-                                        },
-                                        dataType: "json",
-                                        type: "GET"
-                                    });
-                            }
-                            continue;
-                        }
                        $('[name="'+key+'"]').val(details[key]);
                     }
                     window.scrollTo({top: 0, behavior: 'smooth'});
@@ -431,6 +396,8 @@ var CompaniesGrid, type;
             $('.image-input-wrapper').css('background-image','');
             $('input[name="profile_avatar_remove"]').val('');
             $('#image').val('');
+            $('.selectpicker').selectpicker('deselectAll');
+            subCount = 0;
             My.emptyForm();
         }
     };

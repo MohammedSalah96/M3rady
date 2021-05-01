@@ -24,6 +24,10 @@ class NotificationRepository extends BaseRepository implements BaseRepositoryInt
         $this->types = $this->notification->types;
     }
 
+    public function findForAuth($id){
+        return $this->notification->where('id',$id)->where('user_id',$this->authUser()->id)->first();
+    }
+
     public function send($to, $type, $entity = 0){
 
         $notification = new $this->notification;
@@ -34,6 +38,11 @@ class NotificationRepository extends BaseRepository implements BaseRepositoryInt
         $notification->save();
 
         $this->sendFcm($to, $type, $entity);
+    }
+
+    public function delete($notification)
+    {
+        $notification->delete();
     }
 
     public function getForAuth()

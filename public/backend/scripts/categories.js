@@ -15,6 +15,7 @@ var CategoriesGrid, parentId,image;
             "processing": true,
             responsive: true,
             "serverSide": true,
+             stateSave: true,
             "ajax": {
                 "url": config.admin_url + "/categories/data",
                 "type": "POST",
@@ -43,6 +44,9 @@ var CategoriesGrid, parentId,image;
             drawCallback: function (settings) {
                 $('[data-toggle="tooltip"]').tooltip();
             },
+            "order": [
+                [2, "asc"]
+            ],
             'columnDefs': [
                 { 
                     className: 'text-center', targets: [0,1,2,3] 

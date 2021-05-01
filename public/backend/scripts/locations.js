@@ -43,6 +43,7 @@ var LocationsGrid, parentId,image;
             "processing": true,
             responsive: true,
             "serverSide": true,
+            stateSave: true,
             "ajax": {
                 "url": config.admin_url + "/locations/data",
                 "type": "POST",
