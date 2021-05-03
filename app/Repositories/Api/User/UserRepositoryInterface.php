@@ -13,7 +13,7 @@ interface UserRepositoryInterface{
     public function canPost();
     public function userProfile($id);
 
-    public function checkUserForResest($mobile);
+    public function checkUserForResest($dialCode, $mobile);
     public function updatePassword($user, $password);
     
     public function updateProfile(Request $request);

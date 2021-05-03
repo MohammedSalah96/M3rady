@@ -124,6 +124,10 @@ var CompaniesGrid, type, subCount = 0;
             'columnDefs': [
                 { 
                     className: 'text-center', targets: [0,1,2,3,4,5] 
+                },
+                {
+                    "width": "20%",
+                    "targets": 1
                 }
             ],
             "oLanguage": { "sUrl": config.url + '/datatable-lang-' + config.lang_code + '.json' }

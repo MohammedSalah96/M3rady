@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use DB;
 use Validator;
+use App\Helpers\SMSGateWay;
 use Illuminate\Http\Request;
 use App\Helpers\Authorization;
 use App\Http\Controllers\ApiController;
@@ -132,9 +133,14 @@ class UserController extends ApiController {
 
             if ($request->input('mobile') && $request->input('mobile') != $user->mobile) {
                 if ($request->input('step') == 1) {
-                    $verification_code = strval(Random(4));
+                    $verificationCode = strval(Random(4));
                     //send sms to the user
-                    return _api_json(new \stdClass(), ['code' => $verification_code]);
+                    $smsGateWay = new SMSGateWay();
+                    $result = $smsGateWay->send('+'.$request->input('dial_code').$request->input('mobile'), $verificationCode);
+                    if ($result['ErrorCode'] != '000') {
+                        return _api_json(new \stdClass(), ['message' => $result['ErrorMessage']], 400);
+                    }
+                    return _api_json(new \stdClass(), ['code' => $verificationCode]);
                 }
             }
 

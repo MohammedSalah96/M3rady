@@ -62,4 +62,32 @@
     </div>
 </form>
 
+<!--begin::Card-->
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon-cogwheel text-primary"></i>
+            </span>
+            <h3 class="card-label">{{_lang('app.notifications')}}</h3>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <!--begin: Datatable-->
+        <table class="table table-bordered table-head-custom table-checkable" id="kt_datatable">
+            <thead>
+                <tr>
+                    <th>{{ _lang('app.notification')}}</th>
+                    <th>{{ _lang('app.created_at')}}</th>
+                    <th>{{ _lang('app.options')}}</th>
+                </tr>
+            </thead>
+        </table>
+        <!--end: Datatable-->
+    </div>
+
+</div>
+<!--end::Card-->
+
 @endsection

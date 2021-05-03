@@ -180,8 +180,8 @@ class User extends Authenticatable implements UserInterface {
             $transformer->name = $this->name_en;
         }
         $transformer->description = $this->description;
-        $transformer->mobile = $this->dial_code.''.$this->mobile;
-        $transformer->whatsapp = $this->whatsapp;
+        $transformer->mobile = $this->dial_code . '' . $this->mobile;
+        $transformer->whatsapp = $this->dial_code . '' . ltrim($this->whatsapp,'0');
         $transformer->facebook = $this->facebook;
         $transformer->twitter = $this->twitter;
         $transformer->website = $this->website;
@@ -208,6 +208,8 @@ class User extends Authenticatable implements UserInterface {
         } else {
             $transformer->image = url("public/uploads/users/$this->image");
         }
+        $transformer->followings_count = $this->followings()->count();
+        $transformer->likes_count = $this->likes()->count();
         return $transformer;
     }
     

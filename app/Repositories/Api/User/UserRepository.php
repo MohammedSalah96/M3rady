@@ -121,8 +121,9 @@ class UserRepository extends BaseRepository implements BaseRepositoryInterface, 
     }
 
 
-     public function checkUserForResest($mobile){
-         return $this->user->where('mobile',$mobile)
+     public function checkUserForResest($dialCode, $mobile){
+         return $this->user->where('dial_code', $dialCode)
+                            ->where('mobile', $mobile)
                            ->where('active',true)
                            ->first();
      }

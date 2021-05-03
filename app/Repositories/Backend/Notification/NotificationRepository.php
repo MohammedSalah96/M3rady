@@ -33,6 +33,10 @@ class NotificationRepository extends BaseRepository implements  NotificationRepo
       $this->deviceRepository =  $deviceRepository;
    }
 
+   public function find($id){
+      return $this->notification->find($id);
+   }
+
    public function create(Request $request)
    {
       $notification = new $this->notification;
@@ -43,6 +47,22 @@ class NotificationRepository extends BaseRepository implements  NotificationRepo
       $this->createUsersNotification($notification, $request);
       $this->sendFcmNotification($request);
    }
+
+
+   public function dataTable(Request $request)
+   {
+      return $this->notification->join('notification_translations', function ($query) {
+                              $query->on('notifications.id', '=', 'notification_translations.notification_id')
+                                 ->where('notification_translations.locale', $this->langCode);
+                              })
+                              ->select('notifications.*', 'notification_translations.body');
+   }
+
+   public function getTranslations($notification)
+   {
+      return $this->notificationTranslation->where('notification_id', $notification->id)->get()->keyBy('locale');
+   }
+   
 
    private function createNotificationTranslations($notification, $request){
 

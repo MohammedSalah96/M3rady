@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Helpers\SMSGateWay;
 use DB;
 use Validator;
 use Illuminate\Http\Request;
@@ -100,9 +101,13 @@ class RegisterController extends ApiController {
                 return _api_json(new \stdClass(), ['errors' => $errors], 400);
             }
             if ($request->input('step') == 1) {
-                $verification_code = strval(Random(4));
-                //send sms to the user
-                return _api_json(new \stdClass(), ['code' => $verification_code]);
+                $verificationCode = strval(Random(4));
+                $smsGateWay = new SMSGateWay();
+                $result = $smsGateWay->send('+'.$request->input('dial_code').$request->input('mobile'), $verificationCode);
+                if ($result['ErrorCode'] != '000') {
+                    return _api_json(new \stdClass(), ['message' => $result['ErrorMessage']], 400);
+                }
+                return _api_json(new \stdClass(), ['code' => $verificationCode]);
             }
 
             DB::beginTransaction();
@@ -131,6 +136,7 @@ class RegisterController extends ApiController {
             
         } catch (\Exception $ex) {
             DB::rollback();
+            dd($ex);
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
         }

@@ -118,7 +118,8 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                 $query->on('users.id', '=', 'package_subscriptions.user_id')
                                     ->where('package_subscriptions.id', \DB::raw('(select max(id) from package_subscriptions where user_id = users.id)'))
                                     ->whereDate('package_subscriptions.end_date', '>=', date('Y-m-d'));
-                            });
+                            })
+                            ->where('users.active',true);
                             if ($request->input('company_id')) {                     
                                 $posts->where('posts.user_id', $request->input('company_id'));
                             }
@@ -198,11 +199,14 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                         if ($request->input('search')) {
                                             $posts->where(function($query) use($request){
                                                 $query->whereRaw($this->post->handleKeywordWhere(
-                                                ['company_details.company_id',
-                                                 'company_details.name_ar',
-                                                  'company_details.name_en'
+                                                [
+                                                    'company_details.company_id',
+                                                    'company_details.name_ar',
+                                                    'company_details.name_en',
+                                                    'company_details.description'
                                                 ],$request->input('search')));
                                             })
+                                            
                                             ->where('posts.id', \DB::raw('(select max(id) from posts where posts.user_id = users.id)'))
                                             ->orderByRaw('ISNULL(is_featured)')
                                             ->orderBy('posts.created_at','desc');

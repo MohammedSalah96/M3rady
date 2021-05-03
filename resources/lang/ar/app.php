@@ -177,6 +177,8 @@ return [
     'sended_successfully' => 'ارسلت بنجاح',
     'about_us' => 'من نحن',
     'has_abuses' => 'به بلاغات إساءة',
+    'notification' => 'الإشعار',
+    'resend' => 'إعادة الإرسال'
 
 
     

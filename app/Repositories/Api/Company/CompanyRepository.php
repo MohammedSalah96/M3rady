@@ -32,7 +32,8 @@ class CompanyRepository extends BaseRepository implements BaseRepositoryInterfac
                                 ->join('location_translations as city_translations',function($query){
                                     $query->on('users.city_id','=','city_translations.location_id')
                                     ->where('city_translations.locale',$this->langCode);
-                                });
+                                })
+                                ->where('users.active',true);
                                 
                                 if ($user && $user->type == $user->types['company']) {
                                     $companies->where('users.id','<>',$user->id);
@@ -97,7 +98,8 @@ class CompanyRepository extends BaseRepository implements BaseRepositoryInterfac
                                 ->join('location_translations as city_translations',function($query){
                                     $query->on('users.city_id','=','city_translations.location_id')
                                     ->where('city_translations.locale',$this->langCode);
-                                });
+                                })
+                                ->where('users.active',true);
                                 if ($user) {
                                     $company->leftJoin('rates', function ($query) use($user){
                                         $query->on('users.id', '=', 'rates.company_id')
