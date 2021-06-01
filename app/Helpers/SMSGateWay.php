@@ -7,9 +7,9 @@ Class SMSGateWay {
     
     
     private $url    = "https://apps.gateway.sa/";
-    private $user  = "jalalcom";
-    private $password = '001230045600789';
-    private $sid = 'M3RADYAPP';
+    private $user  = "";
+    private $password = '';
+    private $sid = '';
 
     public function send($to, $verification_code)
     {
