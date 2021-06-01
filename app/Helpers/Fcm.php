@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 class Fcm {
 
-    private $key = 'AAAAp_9IOHo:APA91bGzmbnOVYqeVc-mDOdrdmkhonudPW2DStEabPknx-FXOcVu2bNiOABOK8BwXCK-HVML4Vi6zOVMvXoL5-7Y_M1QlLkE4IqFJSwVKexIZXv1kI614gk_FrsHIsIcBszzP5JcXD5l';
+    private $key = '';
 
 
     public function send($token, $notification, $device_type) {
