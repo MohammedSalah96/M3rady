@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+
 class Comment extends MyModel
 {
     protected $table = "comments";
@@ -23,15 +25,17 @@ class Comment extends MyModel
        $transformer->id = $this->id;
        
        $transformer->user_id = $this->user_id;
-       $transformer->name = $this->company_id ?: $this->name;
+       $transformer->name = $this->company_id ? $this->{'name_'.$this->getLangCode()} : $this->name;
        $transformer->image = url("public/uploads/users/$this->user_image");
        $transformer->user_type = $this->type;
         $transformer->comment = $this->comment;
         $transformer->comment_image = $this->image ? url("public/uploads/comments/$this->image") : "";
-       if (is_bool($this->is_mine)) {
+        if (is_bool($this->is_mine)) {
            $transformer->is_mine = $this->is_mine;
-       }
-       $transformer->date = $this->created_at->format('Y-m-d h:i a');
+        }
+        Carbon::setLocale($this->getLangCode());
+        $transformer->date_for_humans = Carbon::parse($this->created_at->setTimezone(request()->header('tz')))->diffForHumans();
+        $transformer->date = $this->created_at->setTimezone(request()->header('tz'))->format('Y-m-d h:i a');
        return $transformer;
 
     }

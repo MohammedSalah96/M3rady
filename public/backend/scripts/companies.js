@@ -111,6 +111,10 @@ var CompaniesGrid, type, subCount = 0;
                     "data": "active",
                     "name": "users.active",
                      orderable: false,
+                },
+                {
+                    "data": "created_at",
+                    "name": "users.created_at"
                 }, 
                 {
                     "data": "options",
@@ -121,6 +125,9 @@ var CompaniesGrid, type, subCount = 0;
             drawCallback: function (settings) {
                 $('[data-toggle="tooltip"]').tooltip();
             },
+            "order": [
+                [5, "desc"]
+            ],
             'columnDefs': [
                 { 
                     className: 'text-center', targets: [0,1,2,3,4,5] 

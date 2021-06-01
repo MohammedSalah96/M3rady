@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Helpers\SMSGateWay;
 use DB;
 use Validator;
+use App\Helpers\TwilioSMS;
+use App\Helpers\HiWhatsapp;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Repositories\Api\Post\PostRepositoryInterface;
@@ -80,6 +81,8 @@ class RegisterController extends ApiController {
             if ($request->input('step') == 1) {
                 if ($request->input('type') == $this->userRepository->types['client']) {
                     $rules= array_merge($this->step_one_rules, $this->client_rules);
+                }else{
+                    $this->step_one_rules['company_id'] = 'unique:company_details,company_id';
                 }
                 $rules = $this->step_one_rules;
             }else if($request->input('step') == 2){
@@ -102,11 +105,8 @@ class RegisterController extends ApiController {
             }
             if ($request->input('step') == 1) {
                 $verificationCode = strval(Random(4));
-                $smsGateWay = new SMSGateWay();
-                $result = $smsGateWay->send('+'.$request->input('dial_code').$request->input('mobile'), $verificationCode);
-                if ($result['ErrorCode'] != '000') {
-                    return _api_json(new \stdClass(), ['message' => $result['ErrorMessage']], 400);
-                }
+                $sms_manager = new HiWhatsapp();
+                $sms_manager->send($request->input('dial_code') . ltrim($request->input('mobile'), '0'), $verificationCode);
                 return _api_json(new \stdClass(), ['code' => $verificationCode]);
             }
 
@@ -136,7 +136,6 @@ class RegisterController extends ApiController {
             
         } catch (\Exception $ex) {
             DB::rollback();
-            dd($ex);
             $message = _lang('app.something_went_wrong');
             return _api_json(new \stdClass(), ['message' => $message], 400);
         }

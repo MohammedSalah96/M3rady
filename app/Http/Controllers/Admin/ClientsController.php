@@ -199,6 +199,9 @@ class ClientsController extends BackendController
                 }
                 return $back;
             })
+            ->editColumn('created_at', function ($item) {
+                return $item->created_at->format('Y-m-d H:i:s');
+            })
             ->editColumn('active', function ($item) {
                 if ($item->active == true) {
                     $message = _lang('app.active');

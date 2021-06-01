@@ -189,6 +189,7 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                             ->where('posts.id',\DB::raw('(select max(id) from posts where posts.user_id = users.id)'))
                                             ->orderByRaw('ISNULL(is_featured)')
                                             ->orderBy('posts.created_at','desc');
+                                            $columns[] = 'users.created_at';
                                         }
                                         if ($request->input('country')) {
                                             $posts->where('users.country_id', $request->input('country'));
@@ -210,6 +211,7 @@ class PostRepository extends BaseRepository implements BaseRepositoryInterface, 
                                             ->where('posts.id', \DB::raw('(select max(id) from posts where posts.user_id = users.id)'))
                                             ->orderByRaw('ISNULL(is_featured)')
                                             ->orderBy('posts.created_at','desc');
+                                            $columns[] = 'users.created_at';
                                         }
                                         if ($request->input('order_by')) {
                                             switch ($request->input('order_by')) {

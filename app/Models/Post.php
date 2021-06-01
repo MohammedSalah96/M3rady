@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+
 class Post extends MyModel
 {
     protected $table = "posts";
@@ -60,7 +62,9 @@ class Post extends MyModel
         $transformer->description = $this->description;
         $transformer->number_of_likes = $this->number_of_likes;
         $transformer->number_of_comments = $this->number_of_comments;
-        $transformer->date = $this->created_at->format('Y-m-d h:i a');
+        Carbon::setLocale($this->getLangCode());
+        $transformer->date_for_humans = Carbon::parse($this->created_at->setTimezone(request()->header('tz')))->diffForHumans();
+        $transformer->date = $this->created_at->setTimezone(request()->header('tz'))->format('Y-m-d h:i a');
         if ($this->auth_user()) {
             $transformer->is_liked = $this->is_liked ? true : false;
             $transformer->is_abused = $this->is_abused ? true : false;

@@ -20,7 +20,7 @@ class Follower extends MyModel
        $transformer = new \stdClass();
         $transformer->id = $this->id;
         $transformer->user_type = $this->type;
-        $transformer->name = $this->name;
+        $transformer->name = $this->name ? : $this->{"name_" . $this->getLangCode()};
         $transformer->image = url("public/uploads/users/$this->image");
         $transformer->country = $this->country;
         $transformer->city = $this->city;

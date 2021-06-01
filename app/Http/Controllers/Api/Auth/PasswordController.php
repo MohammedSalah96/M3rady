@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use Validator;
-use App\Helpers\SMSGateWay;
+use App\Helpers\HiWhatsapp;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Repositories\Api\User\UserRepositoryInterface;
@@ -43,11 +43,8 @@ class PasswordController extends ApiController {
             }
             $verificationCode = strval(Random(4));
             //send sms with verification code to the user
-            $smsGateWay = new SMSGateWay();
-            $result = $smsGateWay->send('+'.$request->input('dial_code').$request->input('mobile'), $verificationCode);
-            if ($result['ErrorCode'] != '000') {
-                return _api_json('', ['message' => $result['ErrorMessage']], 400);
-            }
+            $sms_manager = new HiWhatsapp();
+            $sms_manager->send($request->input('dial_code') . ltrim($request->input('mobile'), '0'), $verificationCode);
             return _api_json('', ['code' => $verificationCode]);
         } catch (\Exception $ex) {
             $message = _lang('app.something_went_wrong');

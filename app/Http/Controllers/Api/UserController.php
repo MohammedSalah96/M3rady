@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use DB;
 use Validator;
-use App\Helpers\SMSGateWay;
+use App\Helpers\HiWhatsapp;
 use Illuminate\Http\Request;
 use App\Helpers\Authorization;
 use App\Http\Controllers\ApiController;
@@ -135,11 +135,8 @@ class UserController extends ApiController {
                 if ($request->input('step') == 1) {
                     $verificationCode = strval(Random(4));
                     //send sms to the user
-                    $smsGateWay = new SMSGateWay();
-                    $result = $smsGateWay->send('+'.$request->input('dial_code').$request->input('mobile'), $verificationCode);
-                    if ($result['ErrorCode'] != '000') {
-                        return _api_json(new \stdClass(), ['message' => $result['ErrorMessage']], 400);
-                    }
+                    $sms_manager = new HiWhatsapp();
+                    $sms_manager->send($request->input('dial_code') . ltrim($request->input('mobile'), '0'), $verificationCode);
                     return _api_json(new \stdClass(), ['code' => $verificationCode]);
                 }
             }

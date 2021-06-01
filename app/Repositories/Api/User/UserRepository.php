@@ -42,7 +42,7 @@ class UserRepository extends BaseRepository implements BaseRepositoryInterface, 
         $user->name = $request->input('name') ?: "";
         $user->email = $request->input('email');
         $user->dial_code = $request->input('dial_code');
-        $user->mobile = $request->input('mobile');
+        $user->mobile = ltrim($request->input('mobile'), '0');
         $user->password = bcrypt($request->input('password'));
         $user->country_id = $request->input('country');
         $user->city_id = $request->input('city');

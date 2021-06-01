@@ -18,21 +18,25 @@ class PriceRequest extends MyModel {
         'city' => 'string',
         'request' => 'string',
         'reply' => 'string',
-        'is_mine' => 'boolean'
+        'is_mine' => 'boolean',
+        'user_type' => 'integer'
     ];
    
     public function transformList(){
         $transformer = new \stdClass();
         $transformer->id = $this->id;
+        $transformer->user_id = $this->user_id;
+        $transformer->user_type = $this->user_type;
+
         if ($this->company_name) {
-            $transformer->company_id = $this->company_id;
+            $transformer->company_name = $this->company_name;
             $transformer->company_image = url("public/uploads/users/$this->image");
             $transformer->company_name = $this->company_name;
             $transformer->company_country = $this->company_country;
             $transformer->company_city = $this->company_city;
         }else{
             $transformer->user_image = url("public/uploads/users/$this->image");
-            $transformer->user_name = $this->user_name;
+            $transformer->user_name = $this->user_name ?: $this->{"name_" . $this->getLangCode()};
             $transformer->user_country = $this->user_country;
             $transformer->user_city = $this->user_city;
         }

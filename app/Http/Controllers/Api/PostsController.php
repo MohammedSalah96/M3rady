@@ -84,7 +84,7 @@ class PostsController extends ApiController
     {
         try {
             if (!$this->userRepository->canPost()) {
-                $message = _lang('app.your_free_trail_or_subscription_has_ended_subscribe_to_one_of_our_backages_to_be_able_to_post_again');
+                $message = _lang('app.you_have_reached_the_max_limit_for_posting');
                 return _api_json('', ['message' => $message], 400);
             }
             $validator = Validator::make($request->all(), $this->rules);
@@ -170,7 +170,7 @@ class PostsController extends ApiController
                 $message = _lang('app.not_found');
                 return _api_json('', ['message' => $message], 404);
             }
-            if ($this->likeRepository->createOrDelete($post)) {
+            if ($this->likeRepository->createOrDelete($post) && $this->likeRepository->authUser()->id != $post->user_id) {
                 $this->notificationRepository->send($post->user_id, $this->notificationRepository->types['like'], $post->id);
             }
             $message = _lang('app.updated_successfully');

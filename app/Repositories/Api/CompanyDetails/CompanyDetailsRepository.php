@@ -52,26 +52,26 @@ class CompanyDetailsRepository extends BaseRepository implements BaseRepositoryI
         if ($request->input('company_description')) {
             $companyDetails->description = $request->input('company_description');
         }
-        if ($request->input('lat')) {
+        if ($request->has('lat')) {
             $companyDetails->lat = $request->input('lat');
         }
-        if ($request->input('lng')) {
+        if ($request->has('lng')) {
             $companyDetails->lng = $request->input('lng');
         }
        
         if ($request->input('allowed_to_rate') != "") {
             $companyDetails->allowed_to_rate = $request->input('allowed_to_rate');
         }
-        if ($request->input('whatsapp')) {
+        if ($request->has('whatsapp')) {
             $companyDetails->whatsapp = $request->input('whatsapp');
         }
-        if ($request->input('facebook')) {
+        if ($request->has('facebook')) {
             $companyDetails->facebook = $request->input('facebook');
         }
-        if ($request->input('twitter')) {
+        if ($request->has('twitter')) {
             $companyDetails->twitter = $request->input('twitter');
         }
-        if ($request->input('website')) {
+        if ($request->has('website')) {
             $companyDetails->website = $request->input('website');
         }
         $companyDetails->save();

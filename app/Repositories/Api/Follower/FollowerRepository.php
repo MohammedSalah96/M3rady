@@ -55,11 +55,12 @@ class FollowerRepository extends BaseRepository implements BaseRepositoryInterfa
             $list = $this->follower->join('users', 'followers.following_id', '=', 'users.id')
                                 ->join('company_details', 'users.id','=', 'company_details.user_id')
                                 ->where('followers.follower_id', $this->authUser()->id);
-                                $columns[] = 'company_details.company_id as name';
+                                $columns = array_merge($columns,['company_details.company_id', 'company_details.name_ar', 'company_details.name_en']);
         }else if($type == 'followers'){
             $list = $this->follower->join('users', 'followers.follower_id', '=', 'users.id')
+                                    ->leftJoin('company_details', 'users.id','=', 'company_details.user_id')
                                     ->where('followers.following_id', $this->authUser()->id);
-                                $columns[] = 'users.name';
+            $columns = array_merge($columns, ['users.name', 'company_details.name_ar', 'company_details.name_en']);
         }
         $list->join('location_translations as country_translations',function($query){
                                 $query->on('users.country_id','=','country_translations.location_id')

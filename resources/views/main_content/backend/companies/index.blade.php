@@ -225,6 +225,7 @@
                     <th>{{ _lang('app.mobile')}}</th>
                     <th>{{ _lang('app.country')}}</th>
                     <th>{{ _lang('app.status')}}</th>
+                    <th>{{ _lang('app.created_at')}}</th>
                     <th>{{ _lang('app.options')}}</th>
                 </tr>
             </thead>

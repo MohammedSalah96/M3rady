@@ -109,8 +109,8 @@ class User extends Authenticatable implements UserInterface {
         $transformer->email = $this->email;
         $transformer->dial_code = $this->dial_code;
         $transformer->mobile = $this->mobile ?: "";
-        $transformer->country_id = $this->country_id;
-        $transformer->city_id = $this->city_id;
+        $transformer->country_id = $this->country_id ?: 0;
+        $transformer->city_id = $this->city_id ?: 0;
         if (filter_var($this->image, FILTER_VALIDATE_URL)) {
             $transformer->image = $this->image;
         } else {
@@ -123,12 +123,14 @@ class User extends Authenticatable implements UserInterface {
             if ($companyDetails->available_free_posts < Setting::where('name', 'allowed_free_posts')->first()->value) {
                 $transformer->allowed_to_post = true;
             } else {
-                if ($userSubscription && $userSubscription->end_date >= date('Y-m-d')) {
+                $transformer->allowed_to_post = false;
+                /*if ($userSubscription && $userSubscription->end_date >= date('Y-m-d')) {
                     $transformer->allowed_to_post = true;
                 } else {
                     $transformer->allowed_to_post = false;
-                }
+                }*/
             }
+            $transformer->name = $companyDetails->{"name_".$this->getLangCode()};
             $transformer->is_featured = $userSubscription && $userSubscription->end_date >= date('Y-m-d') ? true : false;
             $transformer->company_details = $companyDetails->transform();
             $transformer->categories = $this->companyCategories();
@@ -181,7 +183,7 @@ class User extends Authenticatable implements UserInterface {
         }
         $transformer->description = $this->description;
         $transformer->mobile = $this->dial_code . '' . $this->mobile;
-        $transformer->whatsapp = $this->dial_code . '' . ltrim($this->whatsapp,'0');
+        $transformer->whatsapp = $this->whatsapp ? $this->dial_code . '' . ltrim($this->whatsapp,'0') : "";
         $transformer->facebook = $this->facebook;
         $transformer->twitter = $this->twitter;
         $transformer->website = $this->website;

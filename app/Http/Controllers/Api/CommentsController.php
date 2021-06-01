@@ -68,7 +68,9 @@ class CommentsController extends ApiController {
             } 
             DB::beginTransaction();
             $comment = $this->commentRepository->create($request);
-            $this->notificationRepository->send($post->user_id, $this->notificationRepository->types['comment'],$request->input('post_id'));
+            if ($this->commentRepository->authUser()->id != $post->user_id) {
+                $this->notificationRepository->send($post->user_id, $this->notificationRepository->types['comment'], $request->input('post_id'));
+            }
             $comment = $this->commentRepository->find($comment->id)->transform();
             $message = _lang('app.posted_successfully');
             DB::commit();

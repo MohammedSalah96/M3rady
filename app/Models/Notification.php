@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+
 class Notification extends MyModel
 {
     protected $table = "notifications";
     protected $casts = [
         'id' => 'integer',
         'type' => 'integer',
-        'entity' => 'integer'
+        'entity' => 'integer',
+        'user_type' => 'integer'
     ];
 
     public $types = [
@@ -57,15 +60,20 @@ class Notification extends MyModel
         $transformer->id = $this->id;
         $transformer->type = $this->type;
         if ($this->type != $this->types['general']) {
-            $name = $this->company_id ?: $this->name;
+            $name = $this->company_id ? $this->{'name_'.$this->getLangCode()} : $this->name;
             $transformer->body = $name . ' ' . $this->{array_search($this->type, $this->types) . "_messages"}[$this->getLangCode()];
         }else{
             $transformer->body = $this->body;
         }
         if ($this->entity_id) {
             $transformer->entity_id = $this->entity_id;
+        }else if($this->type == $this->types['follow']){
+            $transformer->user_type = $this->user_type;
+            $transformer->entity_id = $this->created_by;
         }
-        $transformer->date = $this->created_at->format('Y-m-d h:i a');
+        Carbon::setLocale($this->getLangCode());
+        $transformer->date_for_humans = Carbon::parse($this->created_at->setTimezone(request()->header('tz')))->diffForHumans();
+        $transformer->date = $this->created_at->setTimezone(request()->header('tz'))->format('Y-m-d h:i a');
 
         return $transformer;
     }

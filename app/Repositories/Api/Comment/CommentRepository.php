@@ -19,7 +19,7 @@ class CommentRepository extends BaseRepository implements BaseRepositoryInterfac
     }
 
     public function list(Request $request, $postId){
-        return $this->getComments($postId)->paginate(3);
+        return $this->getComments($postId)->paginate($this->limit);
     }
 
     public function find($id)
@@ -62,6 +62,8 @@ class CommentRepository extends BaseRepository implements BaseRepositoryInterfac
         $columns = [
             'comments.*',
             'company_details.company_id',
+            'company_details.name_ar',
+            'company_details.name_en',
             'users.image as user_image',
             'users.name',
             'users.type'

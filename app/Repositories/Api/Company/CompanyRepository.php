@@ -47,7 +47,10 @@ class CompanyRepository extends BaseRepository implements BaseRepositoryInterfac
                                         $companies->where('users.city_id',$request->input('city'));
                                     }
                                     if ($request->input('category')) {
-                                        $companies->where('company_details.main_category_id',$request->input('category'));
+                                        $companies->join('company_categories',function($query) use($request){
+                                            $query->on('company_categories.company_id','=','users.id')
+                                             ->where('company_categories.category_id',$request->input('category'));
+                                        });
                                     }
                                 }
                                 $companies->select(

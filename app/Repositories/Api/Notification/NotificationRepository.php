@@ -56,7 +56,7 @@ class NotificationRepository extends BaseRepository implements BaseRepositoryInt
                 ->where('notifications.type', $this->types['general']);
         })
         ->where('notifications.user_id',$user->id)
-        ->select('notifications.*','users.name', 'company_details.company_id', 'notification_translations.body')
+        ->select('notifications.*','users.name','users.type as user_type', 'company_details.name_'.$this->langCode,'company_details.company_id', 'notification_translations.body')
         ->orderBy('notifications.created_at','desc')
         ->limit(60)
         ->paginate($this->limit);
@@ -73,7 +73,7 @@ class NotificationRepository extends BaseRepository implements BaseRepositoryInt
         $devices = $this->device->where('user_id', $to)->get();
         $user = $this->authUser();
         if ($companyDetails = $user->companyDetails) {
-            $name = $companyDetails->company_id;
+            $name = $companyDetails->{'name_'.$this->langCode};
         }else{
             $name = $user->name;
         }
@@ -87,6 +87,9 @@ class NotificationRepository extends BaseRepository implements BaseRepositoryInt
             );
             if ($type != $this->types['follow']) {
                 $notification['entity_id'] =  $entity;
+            }else{
+                $notification['entity_id'] =  $user->id;
+                $notification['user_type'] =  $user->type;
             }
             
             if ($device->device_type == $this->device->types['android']) {

@@ -77,6 +77,10 @@ var ClientsGrid, type,image;
                      orderable: false,
                 }, 
                 {
+                    "data": "created_at",
+                    "name": "users.created_at"
+                }, 
+                {
                     "data": "options",
                     orderable: false,
                     searchable: false
@@ -85,6 +89,9 @@ var ClientsGrid, type,image;
             drawCallback: function (settings) {
                 $('[data-toggle="tooltip"]').tooltip();
             },
+            "order": [
+                [6, "desc"]
+            ],
             'columnDefs': [
                 { 
                     className: 'text-center', targets: [0,1,2,3,4,5] 

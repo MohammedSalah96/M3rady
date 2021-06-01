@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+
 class Rate extends MyModel
 {
     protected $table = "rates";
@@ -35,7 +37,10 @@ class Rate extends MyModel
         if (is_bool($this->is_mine)) {
             $transformer->is_mine = $this->is_mine;
         }
-        $transformer->date = $this->created_at->format('Y-m-d h:i a');
+        Carbon::setLocale($this->getLangCode());
+        $transformer->date_for_humans = Carbon::parse($this->created_at->setTimezone(request()->header('tz')))->diffForHumans();
+        $transformer->date = $this->created_at->setTimezone(request()->header('tz'))->format('Y-m-d h:i a');
+       
         return $transformer;
     }
     
