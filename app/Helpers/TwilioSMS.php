@@ -6,9 +6,9 @@ use Twilio\Rest\Client;
 
 Class TwilioSMS {
   
-    private $sid    = "AC98878eaadbda7496a28c6c70dc8e1b63";
-    private $token  = "916c85c22a4da37c79ef77b994bf5b02";
-    private $from = '+16575005053';
+    private $sid    = "";
+    private $token  = "";
+    private $from = '';
 
     public function send($to, $verificationCode)
     {
